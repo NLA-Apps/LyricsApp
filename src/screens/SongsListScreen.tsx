@@ -13,10 +13,16 @@ export default function SongsListScreen({ navigation }: any) {
   useEffect(() => navigation.addListener('focus', () => setProg(getProgress())), [navigation]);
 
   const q = query.trim().toLowerCase();
+  // Sort by artist A→Z (ignoring a leading "The", case-insensitive), then by song.
+  const sortKey = (s: string) => s.replace(/^the\s+/i, '').toLowerCase().trim();
   const songs = library
     .filter((s) => !q || s.track.toLowerCase().includes(q) || s.artist.toLowerCase().includes(q))
     .slice()
-    .sort((a, b) => a.artist.localeCompare(b.artist) || a.track.localeCompare(b.track));
+    .sort(
+      (a, b) =>
+        sortKey(a.artist).localeCompare(sortKey(b.artist)) ||
+        sortKey(a.track).localeCompare(sortKey(b.track))
+    );
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
