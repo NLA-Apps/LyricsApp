@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getVocab, removeWord, VocabWord } from '../vocab';
 import { colors, radius, spacing } from '../theme';
@@ -13,7 +13,7 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-type Mode = 'list' | 'cards' | 'match';
+type Mode = 'list' | 'memory' | 'spell';
 
 export default function VocabScreen({ navigation }: any) {
   const [words, setWords] = useState<VocabWord[]>(getVocab());
@@ -31,12 +31,12 @@ export default function VocabScreen({ navigation }: any) {
         <ListView
           words={words}
           onRemove={(w) => { removeWord(w); setWords(getVocab()); }}
-          onCards={() => setMode('cards')}
-          onMatch={() => setMode('match')}
+          onMemory={() => setMode('memory')}
+          onSpell={() => setMode('spell')}
         />
       )}
-      {mode === 'cards' && <Flashcards words={words} onExit={() => setMode('list')} />}
-      {mode === 'match' && <Matching words={words} onExit={() => setMode('list')} />}
+      {mode === 'memory' && <Memory words={words} onExit={() => setMode('list')} />}
+      {mode === 'spell' && <Spell words={words} onExit={() => setMode('list')} />}
     </SafeAreaView>
   );
 }
@@ -44,13 +44,13 @@ export default function VocabScreen({ navigation }: any) {
 function ListView({
   words,
   onRemove,
-  onCards,
-  onMatch,
+  onMemory,
+  onSpell,
 }: {
   words: VocabWord[];
   onRemove: (w: string) => void;
-  onCards: () => void;
-  onMatch: () => void;
+  onMemory: () => void;
+  onSpell: () => void;
 }) {
   return (
     <>
@@ -68,16 +68,16 @@ function ListView({
         <FlatList
           data={words}
           keyExtractor={(w) => w.word}
-          contentContainerStyle={{ padding: spacing.md, paddingBottom: 130 }}
+          contentContainerStyle={{ padding: spacing.md, paddingBottom: 150 }}
           renderItem={({ item }) => (
             <View style={styles.row}>
+              <TouchableOpacity onPress={() => onRemove(item.word)} hitSlop={10}>
+                <Text style={styles.remove}>✕</Text>
+              </TouchableOpacity>
               <View style={{ flex: 1 }}>
                 <Text style={styles.rowWord}>{item.word}</Text>
                 <Text style={styles.rowTr}>{item.translation}</Text>
               </View>
-              <TouchableOpacity onPress={() => onRemove(item.word)} hitSlop={10}>
-                <Text style={styles.remove}>✕</Text>
-              </TouchableOpacity>
             </View>
           )}
         />
@@ -87,23 +87,23 @@ function ListView({
         <View style={styles.practiceBar}>
           <TouchableOpacity
             style={[styles.practiceBtn, words.length < 3 && styles.btnDisabled]}
-            onPress={words.length < 3 ? undefined : onMatch}
+            onPress={words.length < 3 ? undefined : onMemory}
             activeOpacity={0.85}
           >
-            <Text style={styles.practiceBtnText}>🧩  משחק התאמה</Text>
+            <Text style={styles.practiceBtnText}>🧠  משחק הזכרון</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.practiceBtnAlt} onPress={onCards} activeOpacity={0.85}>
-            <Text style={styles.practiceBtnAltText}>🃏  כרטיסיות</Text>
+          <TouchableOpacity style={styles.practiceBtnAlt} onPress={onSpell} activeOpacity={0.85}>
+            <Text style={styles.practiceBtnAltText}>✏️  השלמת מילה</Text>
           </TouchableOpacity>
-          {words.length < 3 && <Text style={styles.hintSmall}>למשחק ההתאמה צריך לפחות 3 מילים</Text>}
+          {words.length < 3 && <Text style={styles.hintSmall}>למשחק הזכרון צריך לפחות 3 מילים</Text>}
         </View>
       )}
     </>
   );
 }
 
-// Matching game: tap an English word, then its Hebrew translation. Match = green.
-function Matching({ words, onExit }: { words: VocabWord[]; onExit: () => void }) {
+// Memory game: tap a word on one side, then its match on the other — either side first.
+function Memory({ words, onExit }: { words: VocabWord[]; onExit: () => void }) {
   const BATCH = 6;
   const [round, setRound] = useState(0);
   const roundWords = useMemo(
@@ -113,93 +113,160 @@ function Matching({ words, onExit }: { words: VocabWord[]; onExit: () => void })
 
   const [left, setLeft] = useState<VocabWord[]>([]);
   const [right, setRight] = useState<VocabWord[]>([]);
-  const [selLeft, setSelLeft] = useState<string | null>(null);
+  const [sel, setSel] = useState<{ side: 'l' | 'r'; word: string } | null>(null);
   const [matched, setMatched] = useState<string[]>([]);
   const [wrong, setWrong] = useState<string | null>(null);
 
   useEffect(() => {
     setLeft(shuffle(roundWords));
     setRight(shuffle(roundWords));
-    setSelLeft(null);
+    setSel(null);
     setMatched([]);
     setWrong(null);
   }, [roundWords]);
 
   const allMatched = roundWords.length > 0 && matched.length === roundWords.length;
 
-  function tapLeft(w: string) {
-    if (matched.includes(w)) return;
+  function tap(side: 'l' | 'r', word: string) {
+    if (matched.includes(word)) return;
     setWrong(null);
-    setSelLeft(w);
-  }
-  function tapRight(w: string) {
-    if (matched.includes(w) || !selLeft) return;
-    if (selLeft === w) {
-      setMatched((m) => [...m, w]);
-      setSelLeft(null);
+    if (!sel) { setSel({ side, word }); return; }
+    if (sel.side === side) { setSel({ side, word }); return; } // reselect on same side
+    if (sel.word === word) {
+      setMatched((m) => [...m, word]);
+      setSel(null);
     } else {
-      setWrong(w);
-      setSelLeft(null);
+      setWrong(word);
+      setSel(null);
       setTimeout(() => setWrong(null), 600);
     }
   }
 
   if (allMatched) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.bigEmoji}>🎉</Text>
-        <Text style={styles.doneTitle}>כל הכבוד!</Text>
-        <Text style={styles.doneText}>התאמת את כל המילים בסבב.</Text>
-        <TouchableOpacity style={styles.practiceBtn} onPress={() => setRound((r) => r + 1)} activeOpacity={0.85}>
-          <Text style={styles.practiceBtnText}>🔁  סבב נוסף</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.exitBtn} onPress={onExit} hitSlop={10}>
-          <Text style={styles.exitText}>חזרה לרשימה</Text>
-        </TouchableOpacity>
-      </View>
+      <Done text="התאמת את כל המילים בסבב." onAgain={() => setRound((r) => r + 1)} onExit={onExit} againLabel="🔁  סבב נוסף" />
     );
   }
 
   return (
     <View style={styles.matchWrap}>
-      <Text style={styles.matchHint}>התאם כל מילה לתרגום שלה</Text>
+      <Text style={styles.matchHint}>התאם כל מילה לתרגום שלה (אפשר להתחיל מכל צד)</Text>
       <View style={styles.matchCols}>
         <View style={styles.matchCol}>
           {left.map((w) => {
-            const isMatched = matched.includes(w.word);
-            const isSel = selLeft === w.word;
+            const m = matched.includes(w.word);
+            const s = sel?.side === 'l' && sel.word === w.word;
             return (
-              <TouchableOpacity
-                key={w.word}
-                style={[styles.tile, isSel && styles.tileSel, isMatched && styles.tileMatched]}
-                onPress={() => tapLeft(w.word)}
-                disabled={isMatched}
-                activeOpacity={0.8}
-              >
-                <Text style={[styles.tileText, isMatched && styles.tileTextDim]}>{w.word}</Text>
+              <TouchableOpacity key={w.word} style={[styles.tile, s && styles.tileSel, m && styles.tileMatched]} onPress={() => tap('l', w.word)} disabled={m} activeOpacity={0.8}>
+                <Text style={[styles.tileText, m && styles.tileTextDim]}>{w.word}</Text>
               </TouchableOpacity>
             );
           })}
         </View>
-
         <View style={styles.matchCol}>
           {right.map((w) => {
-            const isMatched = matched.includes(w.word);
-            const isWrong = wrong === w.word;
+            const m = matched.includes(w.word);
+            const s = sel?.side === 'r' && sel.word === w.word;
+            const bad = wrong === w.word;
             return (
-              <TouchableOpacity
-                key={w.word}
-                style={[styles.tile, isWrong && styles.tileWrong, isMatched && styles.tileMatched]}
-                onPress={() => tapRight(w.word)}
-                disabled={isMatched}
-                activeOpacity={0.8}
-              >
-                <Text style={[styles.tileText, isMatched && styles.tileTextDim]}>{w.translation}</Text>
+              <TouchableOpacity key={w.word} style={[styles.tile, s && styles.tileSel, bad && styles.tileWrong, m && styles.tileMatched]} onPress={() => tap('r', w.word)} disabled={m} activeOpacity={0.8}>
+                <Text style={[styles.tileText, m && styles.tileTextDim]}>{w.translation}</Text>
               </TouchableOpacity>
             );
           })}
         </View>
       </View>
+      <TouchableOpacity style={styles.exitBtn} onPress={onExit} hitSlop={10}>
+        <Text style={styles.exitText}>סיום</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+// Spell game: the Hebrew is the clue; the English word shows with some letters
+// missing as empty boxes, and you type the missing letters to complete it.
+function Spell({ words, onExit }: { words: VocabWord[]; onExit: () => void }) {
+  const queue = useMemo(() => shuffle(words), [words]);
+  const [pos, setPos] = useState(0);
+  const [typed, setTyped] = useState('');
+  const [status, setStatus] = useState<'typing' | 'right' | 'wrong'>('typing');
+  const inputRef = useRef<TextInput>(null);
+
+  const card = queue[pos];
+
+  // Decide which letter positions are blank for this word.
+  const blanks = useMemo(() => {
+    if (!card) return [] as number[];
+    const len = card.word.length;
+    const count = Math.max(1, Math.round(len * 0.4));
+    return shuffle([...Array(len).keys()]).slice(0, count).sort((a, b) => a - b);
+  }, [card]);
+
+  useEffect(() => {
+    setTyped('');
+    setStatus('typing');
+    const t = setTimeout(() => inputRef.current?.focus(), 100);
+    return () => clearTimeout(t);
+  }, [pos]);
+
+  if (!card || pos >= queue.length) {
+    return <Done text="סיימת את כל המילים!" onAgain={() => setPos(0)} onExit={onExit} againLabel="🔁  עוד פעם" />;
+  }
+
+  function onType(text: string) {
+    const clean = text.replace(/[^a-zA-Z]/g, '').toLowerCase().slice(0, blanks.length);
+    setTyped(clean);
+    if (clean.length === blanks.length) {
+      const ok = blanks.every((bi, k) => clean[k] === card.word[bi].toLowerCase());
+      if (ok) {
+        setStatus('right');
+        setTimeout(() => setPos((p) => p + 1), 700);
+      } else {
+        setStatus('wrong');
+        setTimeout(() => { setTyped(''); setStatus('typing'); inputRef.current?.focus(); }, 700);
+      }
+    }
+  }
+
+  return (
+    <View style={styles.center}>
+      <Text style={styles.progress}>{pos + 1} / {queue.length}</Text>
+      <Text style={styles.spellClue}>{card.translation}</Text>
+
+      <View style={styles.boxes}>
+        {card.word.split('').map((ch, i) => {
+          const blankIndex = blanks.indexOf(i);
+          const isBlank = blankIndex !== -1;
+          const typedChar = isBlank ? typed[blankIndex] : '';
+          const show = isBlank ? (typedChar || '') : ch;
+          return (
+            <View
+              key={i}
+              style={[
+                styles.box,
+                isBlank && styles.boxBlank,
+                status === 'right' && styles.boxRight,
+                status === 'wrong' && isBlank && styles.boxWrong,
+              ]}
+            >
+              <Text style={styles.boxText}>{show.toUpperCase()}</Text>
+            </View>
+          );
+        })}
+      </View>
+
+      {/* Hidden-ish input that captures the keyboard */}
+      <TextInput
+        ref={inputRef}
+        style={styles.spellInput}
+        value={typed}
+        onChangeText={onType}
+        autoCapitalize="none"
+        autoCorrect={false}
+        autoFocus
+        placeholder="הקלד את האותיות החסרות"
+        placeholderTextColor={colors.textFaint}
+      />
 
       <TouchableOpacity style={styles.exitBtn} onPress={onExit} hitSlop={10}>
         <Text style={styles.exitText}>סיום</Text>
@@ -208,59 +275,17 @@ function Matching({ words, onExit }: { words: VocabWord[]; onExit: () => void })
   );
 }
 
-// Flashcards: reveal the Hebrew, mark known / not yet (unknowns repeat).
-function Flashcards({ words, onExit }: { words: VocabWord[]; onExit: () => void }) {
-  const [queue, setQueue] = useState<VocabWord[]>(() => shuffle(words));
-  const [pos, setPos] = useState(0);
-  const [revealed, setRevealed] = useState(false);
-  const [knownCount, setKnownCount] = useState(0);
-
-  const done = pos >= queue.length;
-  const card = queue[pos];
-
-  function known() { setKnownCount((c) => c + 1); setRevealed(false); setPos((p) => p + 1); }
-  function notYet() { setQueue((q) => [...q, q[pos]]); setRevealed(false); setPos((p) => p + 1); }
-  function restart() { setQueue(shuffle(words)); setPos(0); setRevealed(false); setKnownCount(0); }
-
-  if (done) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.bigEmoji}>🎉</Text>
-        <Text style={styles.doneTitle}>כל הכבוד!</Text>
-        <Text style={styles.doneText}>ידעת {knownCount} כרטיסיות בסבב הזה.</Text>
-        <TouchableOpacity style={styles.practiceBtn} onPress={restart} activeOpacity={0.85}>
-          <Text style={styles.practiceBtnText}>🔁  עוד פעם</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.exitBtn} onPress={onExit} hitSlop={10}>
-          <Text style={styles.exitText}>חזרה לרשימה</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
+function Done({ text, onAgain, onExit, againLabel }: { text: string; onAgain: () => void; onExit: () => void; againLabel: string }) {
   return (
     <View style={styles.center}>
-      <Text style={styles.progress}>{pos + 1} / {queue.length}</Text>
-      <View style={styles.card}>
-        <Text style={styles.cardWord}>{card.word}</Text>
-        {revealed && <Text style={styles.cardTr}>{card.translation}</Text>}
-      </View>
-      {!revealed ? (
-        <TouchableOpacity style={styles.revealBtn} onPress={() => setRevealed(true)} activeOpacity={0.85}>
-          <Text style={styles.revealText}>הצג תרגום</Text>
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.judgeRow}>
-          <TouchableOpacity style={[styles.judgeBtn, styles.notYet]} onPress={notYet} activeOpacity={0.85}>
-            <Text style={styles.judgeText}>עוד לא ✗</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.judgeBtn, styles.knew]} onPress={known} activeOpacity={0.85}>
-            <Text style={styles.judgeText}>ידעתי ✓</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      <Text style={styles.bigEmoji}>🎉</Text>
+      <Text style={styles.doneTitle}>כל הכבוד!</Text>
+      <Text style={styles.doneText}>{text}</Text>
+      <TouchableOpacity style={styles.practiceBtn} onPress={onAgain} activeOpacity={0.85}>
+        <Text style={styles.practiceBtnText}>{againLabel}</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.exitBtn} onPress={onExit} hitSlop={10}>
-        <Text style={styles.exitText}>סיום</Text>
+        <Text style={styles.exitText}>חזרה לרשימה</Text>
       </TouchableOpacity>
     </View>
   );
@@ -287,66 +312,41 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     marginBottom: spacing.sm,
   },
-  rowWord: { color: colors.text, fontSize: 18, fontWeight: '700', textTransform: 'capitalize', textAlign: 'left' },
-  rowTr: { color: colors.primarySoft, fontSize: 15, marginTop: 2, textAlign: 'left' },
+  rowWord: { color: colors.text, fontSize: 18, fontWeight: '700', textTransform: 'capitalize', textAlign: 'right' },
+  rowTr: { color: colors.primarySoft, fontSize: 15, marginTop: 2, textAlign: 'right' },
   remove: { color: colors.textFaint, fontSize: 18, paddingHorizontal: spacing.sm },
 
   practiceBar: { position: 'absolute', left: spacing.lg, right: spacing.lg, bottom: spacing.lg, gap: spacing.sm },
   practiceBtn: { backgroundColor: colors.primary, borderRadius: radius.pill, paddingVertical: 15, alignItems: 'center' },
   practiceBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
-  practiceBtnAlt: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.pill,
-    paddingVertical: 13,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.surfaceLight,
-  },
+  practiceBtnAlt: { backgroundColor: colors.surface, borderRadius: radius.pill, paddingVertical: 13, alignItems: 'center', borderWidth: 1, borderColor: colors.surfaceLight },
   practiceBtnAltText: { color: colors.text, fontSize: 15, fontWeight: '700' },
   btnDisabled: { backgroundColor: colors.surfaceLight },
   hintSmall: { color: colors.textFaint, fontSize: 12, textAlign: 'center' },
 
-  // Matching game
+  // Memory game
   matchWrap: { flex: 1, padding: spacing.lg },
-  matchHint: { color: colors.textMuted, fontSize: 15, textAlign: 'center', marginBottom: spacing.lg },
+  matchHint: { color: colors.textMuted, fontSize: 14, textAlign: 'center', marginBottom: spacing.lg },
   matchCols: { flexDirection: 'row', gap: spacing.md, flex: 1 },
   matchCol: { flex: 1, gap: spacing.sm },
-  tile: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    paddingVertical: 16,
-    paddingHorizontal: spacing.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
+  tile: { backgroundColor: colors.surface, borderRadius: radius.md, paddingVertical: 16, paddingHorizontal: spacing.sm, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'transparent' },
   tileSel: { borderColor: colors.primary, backgroundColor: colors.surfaceLight },
   tileMatched: { backgroundColor: colors.success + '33', borderColor: colors.success },
   tileWrong: { borderColor: colors.danger, backgroundColor: colors.danger + '33' },
   tileText: { color: colors.text, fontSize: 16, fontWeight: '700', textAlign: 'center' },
   tileTextDim: { color: colors.textMuted },
 
-  // Flashcards
+  // Spell game
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg },
-  progress: { color: colors.textMuted, fontSize: 15, marginBottom: spacing.lg },
-  card: {
-    width: '100%',
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    paddingVertical: 48,
-    alignItems: 'center',
-    marginBottom: spacing.xl,
-  },
-  cardWord: { color: colors.text, fontSize: 34, fontWeight: '800', textTransform: 'capitalize' },
-  cardTr: { color: colors.primarySoft, fontSize: 26, fontWeight: '700', marginTop: spacing.md },
-  revealBtn: { backgroundColor: colors.surfaceLight, borderRadius: radius.pill, paddingVertical: 14, paddingHorizontal: spacing.xl },
-  revealText: { color: colors.text, fontSize: 16, fontWeight: '700' },
-  judgeRow: { flexDirection: 'row', gap: spacing.md, width: '100%' },
-  judgeBtn: { flex: 1, borderRadius: radius.pill, paddingVertical: 15, alignItems: 'center' },
-  notYet: { backgroundColor: colors.danger },
-  knew: { backgroundColor: colors.success },
-  judgeText: { color: '#fff', fontSize: 16, fontWeight: '800' },
+  progress: { color: colors.textMuted, fontSize: 15, marginBottom: spacing.md },
+  spellClue: { color: colors.primarySoft, fontSize: 26, fontWeight: '800', marginBottom: spacing.xl },
+  boxes: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: spacing.xl },
+  box: { width: 40, height: 48, borderRadius: radius.sm, backgroundColor: colors.surfaceLight, alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'transparent' },
+  boxBlank: { backgroundColor: colors.surface, borderColor: colors.primary },
+  boxRight: { borderColor: colors.success },
+  boxWrong: { borderColor: colors.danger },
+  boxText: { color: colors.text, fontSize: 22, fontWeight: '800' },
+  spellInput: { width: '100%', backgroundColor: colors.surface, borderRadius: radius.md, paddingHorizontal: spacing.md, paddingVertical: 14, color: colors.text, fontSize: 18, textAlign: 'center', letterSpacing: 4 },
 
   exitBtn: { marginTop: spacing.xl },
   exitText: { color: colors.textMuted, fontSize: 15 },
