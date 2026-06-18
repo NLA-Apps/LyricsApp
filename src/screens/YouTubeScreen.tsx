@@ -215,6 +215,25 @@ export default function YouTubeScreen({ navigation }: any) {
     setLrcError('');
     setLines([]);
 
+    // 0) Built-in lyrics bundled with the app (public/lyrics/<videoId>.lrc).
+    //    Served from our own site — fast and reliable, no external network.
+    if (videoId) {
+      try {
+        const res = await fetch(`lyrics/${videoId}.lrc`);
+        if (res.ok) {
+          const parsed = parseLrc(await res.text());
+          if (parsed.length) {
+            setLines(parsed);
+            saveLrcCache(videoId, parsed);
+            playerRef.current?.playVideo?.();
+            preTranslateLines(parsed);
+            setLoading(false);
+            return;
+          }
+        }
+      } catch {}
+    }
+
     // 1) Offline cache (instant, no network).
     if (videoId) {
       const cached = loadLrcCache(videoId);
@@ -233,7 +252,7 @@ export default function YouTubeScreen({ navigation }: any) {
       const data = await fetchJson(`https://lrclib.net/api/search?q=${q}`);
       const hit = Array.isArray(data) ? data.find((d: any) => d.syncedLyrics) : null;
       if (!hit) {
-        setLrcError('לא נמצאו מילים מסונכרנות לשיר הזה. נסה לתקן את שם השיר/האמן.');
+        setLrcError('השיר לא נמצא במאגר המובנה. אפשר להוסיף אותו לתיקיית lyrics.');
       } else {
         const parsed = parseLrc(hit.syncedLyrics);
         setLines(parsed);
@@ -242,7 +261,7 @@ export default function YouTubeScreen({ navigation }: any) {
         preTranslateLines(parsed); // translate all lines ahead of time
       }
     } catch {
-      setLrcError('שגיאה בחיבור למאגר המילים.');
+      setLrcError('השיר לא נמצא במאגר המובנה (והחיפוש החי נכשל).');
     }
     setLoading(false);
   }
