@@ -13,6 +13,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import YouTubePlayer from '../components/YouTubePlayer';
 import { translateToHebrew, cachedTranslation } from '../translate';
 import { fetchJson } from '../net';
+import { isSaved, toggleWord } from '../vocab';
 import { colors, radius, spacing } from '../theme';
 
 const cleanWord = (w: string) => w.replace(/[^a-zA-Z']/g, '').toLowerCase();
@@ -84,6 +85,8 @@ export default function YouTubeScreen({ navigation, route }: any) {
   // Tapped word -> translation bubble.
   const [selected, setSelected] = useState<string | null>(null); // "line-word" key
   const [wordTranslation, setWordTranslation] = useState('');
+  const [selectedWord, setSelectedWord] = useState(''); // clean tapped word
+  const [selectedSaved, setSelectedSaved] = useState(false); // is it in vocab
   // Per-line "translate whole line" toggle + cached results.
   const [openLines, setOpenLines] = useState<Record<number, boolean>>({});
   const [lineTranslations, setLineTranslations] = useState<Record<number, string>>({});
@@ -133,9 +136,11 @@ export default function YouTubeScreen({ navigation, route }: any) {
       closeBubble();
       return;
     }
-    setSelected(key);
-    playerRef.current?.pauseVideo?.();
     const w = cleanWord(word);
+    setSelected(key);
+    setSelectedWord(w);
+    setSelectedSaved(isSaved(w));
+    playerRef.current?.pauseVideo?.();
     // Show instantly if we already have it cached (offline); otherwise fetch.
     const cached = cachedTranslation(w);
     setWordTranslation(cached ?? '...');
@@ -143,6 +148,13 @@ export default function YouTubeScreen({ navigation, route }: any) {
       const tr = await translateToHebrew(w);
       setWordTranslation(tr);
     }
+  }
+
+  // Save / remove the tapped word from the personal vocabulary.
+  async function toggleSaveWord() {
+    let tr = wordTranslation;
+    if (!tr || tr === '...') tr = await translateToHebrew(selectedWord);
+    setSelectedSaved(toggleWord(selectedWord, tr));
   }
 
   // Toggle the full-line translation. Opening pauses the song; closing resumes.
@@ -455,9 +467,14 @@ export default function YouTubeScreen({ navigation, route }: any) {
                           <View key={wi} style={[styles.wordWrap, isSel && styles.wordWrapActive]}>
                             {isSel && (
                               <View style={styles.bubbleContainer} pointerEvents="box-none">
-                                <TouchableOpacity style={styles.bubble} onPress={closeBubble} activeOpacity={0.85}>
-                                  <Text style={styles.bubbleText}>{wordTranslation}</Text>
-                                </TouchableOpacity>
+                                <View style={styles.bubble}>
+                                  <TouchableOpacity onPress={closeBubble} activeOpacity={0.85}>
+                                    <Text style={styles.bubbleText}>{wordTranslation}</Text>
+                                  </TouchableOpacity>
+                                  <TouchableOpacity onPress={toggleSaveWord} hitSlop={8}>
+                                    <Text style={styles.bubbleStar}>{selectedSaved ? '★' : '☆'}</Text>
+                                  </TouchableOpacity>
+                                </View>
                                 <View style={styles.bubbleArrow} />
                               </View>
                             )}
@@ -636,6 +653,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   bubbleText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  bubbleStar: { fontSize: 19, color: '#ffe066' },
   bubbleSpeak: { fontSize: 16 },
   bubbleArrow: {
     width: 0,

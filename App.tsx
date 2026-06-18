@@ -6,6 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SongsListScreen from './src/screens/SongsListScreen';
 import SongScreen from './src/screens/SongScreen';
 import YouTubeScreen from './src/screens/YouTubeScreen';
+import VocabScreen from './src/screens/VocabScreen';
 import { colors } from './src/theme';
 
 // The Stack lets us move between screens (list -> song -> back).
@@ -20,6 +21,7 @@ function App() {
           <Stack.Screen name="SongsList" component={SongsListScreen} />
           <Stack.Screen name="Song" component={SongScreen} />
           <Stack.Screen name="YouTube" component={YouTubeScreen} />
+          <Stack.Screen name="Vocab" component={VocabScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

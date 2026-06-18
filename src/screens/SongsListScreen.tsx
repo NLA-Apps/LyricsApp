@@ -8,8 +8,20 @@ export default function SongsListScreen({ navigation }: any) {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <Text style={styles.greeting}>Learn English with songs 🎵</Text>
-        <Text style={styles.title}>Your Songs</Text>
+        <View style={styles.headerRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.greeting}>Learn English with songs 🎵</Text>
+            <Text style={styles.title}>Your Songs</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.vocabBtn}
+            onPress={() => navigation.navigate('Vocab')}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.vocabIcon}>📚</Text>
+            <Text style={styles.vocabLabel}>מילים</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <FlatList
@@ -60,8 +72,20 @@ function SongCard({ song, onPress }: { song: LibrarySong; onPress: () => void })
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   header: { padding: spacing.lg, paddingBottom: spacing.md },
+  headerRow: { flexDirection: 'row', alignItems: 'center' },
   greeting: { color: colors.textMuted, fontSize: 15, marginBottom: 4 },
   title: { color: colors.text, fontSize: 30, fontWeight: '800' },
+  vocabBtn: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.surfaceLight,
+  },
+  vocabIcon: { fontSize: 22 },
+  vocabLabel: { color: colors.textMuted, fontSize: 11, marginTop: 2, fontWeight: '600' },
 
   card: {
     flexDirection: 'row',
