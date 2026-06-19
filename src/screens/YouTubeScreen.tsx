@@ -21,6 +21,8 @@ const cleanWord = (w: string) => w.replace(/[^a-zA-Z']/g, '').toLowerCase();
 
 // Show each line/translation slightly BEFORE it's sung, so it's easy to read ahead.
 const LOOKAHEAD = 0.4; // seconds
+// Extra lead time for per-word highlight — so the word lights up just before it's sung.
+const WORD_LOOKAHEAD = 0.3; // seconds
 
 // Per-song sync offset. A user's own saved calibration (localStorage) wins;
 // otherwise we use the built-in default so everyone gets it aligned.
@@ -401,7 +403,7 @@ export default function YouTubeScreen({ navigation, route }: any) {
         const words = lines[idx].text.split(/\s+/);
         const lineStart = lines[idx].time;
         const lineEnd = lines[idx + 1]?.time ?? lineStart + 4;
-        const elapsed = t - lineStart;
+        const elapsed = (t + WORD_LOOKAHEAD) - lineStart;
         const duration = lineEnd - lineStart;
         const wi = Math.min(
           Math.floor((elapsed / duration) * words.length),
