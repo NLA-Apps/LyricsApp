@@ -131,6 +131,9 @@ export default function YouTubeScreen({ navigation, route }: any) {
   const [sentenceTick, setSentenceTick] = useState(0); // bumped to re-render after saving a sentence
   // Live-translated lines (lazily fetched), keyed by line index.
   const [lineTranslations, setLineTranslations] = useState<Record<number, string>>({});
+  // While in English-only mode, a per-line override to reveal just one
+  // line's translation on demand (the 🌐 button).
+  const [openLines, setOpenLines] = useState<Record<number, boolean>>({});
   // 'both' keeps the existing English-with-optional-translation behavior;
   // 'en'/'he' show only one language.
   const [displayMode, setDisplayMode] = useState<'both' | 'en' | 'he'>('both');
@@ -223,6 +226,17 @@ export default function YouTubeScreen({ navigation, route }: any) {
     setSelectedSaved(toggleWord(selectedWord, tr, track || undefined));
   }
 
+  // Reveal (or hide) just this one line's translation — used in
+  // English-only mode, where the Hebrew slot is otherwise hidden.
+  async function toggleLine(i: number, text: string) {
+    setOpenLines((prev) => ({ ...prev, [i]: !prev[i] }));
+    const key = lines[i]?.tag;
+    if (!(key && bundledTr[key]) && !lineTranslations[i]) {
+      const tr = await translateToHebrew(text);
+      setLineTranslations((prev) => ({ ...prev, [i]: tr }));
+    }
+  }
+
   function loadVideo() {
     const id = extractVideoId(link);
     if (!id) {
@@ -244,6 +258,7 @@ export default function YouTubeScreen({ navigation, route }: any) {
     setArtist('');
     setTrack('');
     setSelected(null);
+    setOpenLines({});
     setCurrentLine(-1);
     setLrcError('');
   }
@@ -561,7 +576,7 @@ export default function YouTubeScreen({ navigation, route }: any) {
                     </View>
                   )}
 
-                  {displayMode !== 'en' && (
+                  {(displayMode !== 'en' || openLines[idx]) && (
                     <View style={styles.heSlot}>
                       {cur.text
                         ? (() => {
@@ -590,17 +605,28 @@ export default function YouTubeScreen({ navigation, route }: any) {
                   )}
 
                   {cur.text && (
-                    <View style={styles.lineActions}>
+                    <View style={styles.lineActionsRow}>
+                      {displayMode === 'en' && (
+                        <TouchableOpacity
+                          style={styles.lineActionBtn}
+                          onPress={() => toggleLine(idx, cur.text)}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={[styles.lineActionIcon, openLines[idx] && styles.lineActionIconActive]}>
+                            🌐
+                          </Text>
+                        </TouchableOpacity>
+                      )}
                       {videoId && (
                         <TouchableOpacity
+                          style={styles.lineActionBtn}
                           onPress={() => {
                             toggleSentence(`${videoId}:${cur.tag}`, cur.text, lineHe(idx), track || undefined);
                             setSentenceTick((t) => t + 1);
                           }}
-                          hitSlop={8}
                           activeOpacity={0.7}
                         >
-                          <Text style={styles.lineSaveStar}>
+                          <Text style={styles.lineActionIcon}>
                             {isSentenceSaved(`${videoId}:${cur.tag}`) ? '★' : '☆'}
                           </Text>
                         </TouchableOpacity>
@@ -782,17 +808,12 @@ const styles = StyleSheet.create({
   wordWrap: { position: 'relative', alignItems: 'center', marginHorizontal: 4 },
   wordWrapActive: { zIndex: 20 },
 
-  lineActions: {
-    position: 'absolute',
-    right: -32,
-    top: 0,
-    bottom: 0,
-    width: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  lineSaveStar: { fontSize: 22, color: colors.textFaint },
+  // Normal-flow row (not absolutely positioned), so it always sits in the
+  // same place under the line regardless of how long the text is.
+  lineActionsRow: { flexDirection: 'row', justifyContent: 'center', gap: spacing.lg, marginTop: spacing.sm },
+  lineActionBtn: { padding: 6 },
+  lineActionIcon: { fontSize: 22, color: colors.textFaint },
+  lineActionIconActive: { color: colors.primarySoft },
 
   // Translation bubble above a tapped word.
   bubbleContainer: {
