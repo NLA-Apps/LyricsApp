@@ -618,7 +618,7 @@ export default function YouTubeScreen({ navigation, route }: any) {
                       >
                         <MaterialIcons
                           name="translate"
-                          size={19}
+                          size={26}
                           color={openLines[idx] ? colors.primary : colors.textFaint}
                         />
                       </TouchableOpacity>
@@ -784,7 +784,10 @@ const styles = StyleSheet.create({
 
   // Focused karaoke view
   karaoke: { paddingHorizontal: spacing.lg, paddingTop: spacing.xs, alignItems: 'center' },
+  // Fixed height (an empty peek line — at the very start/end of a song —
+  // would otherwise collapse to ~0 height and shift everything below it).
   contextLine: {
+    height: 20,
     color: colors.textFaint,
     fontSize: 13,
     textAlign: 'center',
@@ -823,15 +826,16 @@ const styles = StyleSheet.create({
   // same place under the line regardless of how long the text is.
   // Fixed height and always mounted (even with no line/icons to show) so
   // nothing below it ever shifts up or down.
-  lineActionsRow: { height: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.lg, marginTop: 2 },
+  lineActionsRow: { height: 38, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.lg, marginTop: 2 },
   lineActionBtn: { padding: 4 },
-  lineActionIcon: { fontSize: 19, color: colors.textFaint },
+  lineActionIcon: { fontSize: 26, color: colors.textFaint },
   lineActionIconActive: { color: colors.primarySoft },
 
   // Translation bubble above a tapped word.
   bubbleContainer: {
     position: 'absolute',
     bottom: '100%',
+    marginBottom: 6,
     left: -1000,
     right: -1000,
     alignItems: 'center',
