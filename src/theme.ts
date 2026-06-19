@@ -37,3 +37,13 @@ export const radius = {
   lg: 24,
   pill: 999,
 };
+
+// Rubik — a clean, modern Google Font with proper Hebrew glyphs. Loaded via
+// expo-font in App.tsx; use these names on buttons/headings for a more
+// polished look than the system default font.
+export const fonts = {
+  regular: 'Rubik_400Regular',
+  medium: 'Rubik_500Medium',
+  bold: 'Rubik_700Bold',
+  extraBold: 'Rubik_800ExtraBold',
+};

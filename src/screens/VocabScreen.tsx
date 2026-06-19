@@ -5,7 +5,7 @@ import { getVocab, removeWord, VocabWord } from '../vocab';
 import { award, getProgress, getLevel, xpIntoLevel, XP_PER_LEVEL, onXpGain } from '../progress';
 import { speakWord } from '../speech';
 import { recordResult, weightedSample, weightedQueue } from '../srs';
-import { colors, radius, spacing } from '../theme';
+import { colors, fonts, radius, spacing } from '../theme';
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -647,7 +647,7 @@ function Done({ text, onAgain, onExit, againLabel }: { text: string; onAgain: ()
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   topBar: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
-  back: { color: colors.primarySoft, fontSize: 17, fontWeight: '600' },
+  back: { color: colors.primarySoft, fontSize: 20, fontFamily: fonts.bold },
 
   header: { paddingHorizontal: spacing.lg, paddingBottom: spacing.md },
   title: { color: colors.text, fontSize: 26, fontWeight: '800' },
@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
   gameGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, justifyContent: 'space-between' },
   gameBtn: { flex: 1, backgroundColor: colors.primary, borderRadius: radius.md, paddingVertical: 15, paddingHorizontal: 4, alignItems: 'center' },
   gameBtnGrid: { flexBasis: '47%', flexGrow: 0 },
-  gameBtnText: { color: '#fff', fontSize: 14, fontWeight: '800', textAlign: 'center' },
+  gameBtnText: { color: '#fff', fontSize: 15, fontFamily: fonts.extraBold, textAlign: 'center' },
   btnDisabled: { backgroundColor: colors.surfaceLight },
   hintSmall: { color: colors.textFaint, fontSize: 12, textAlign: 'center', marginTop: spacing.sm },
   allGamesBtn: {
@@ -697,10 +697,17 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.primarySoft,
   },
-  allGamesBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
+  allGamesBtnText: { color: '#fff', fontSize: 17, fontFamily: fonts.extraBold },
   allGamesPage: { flex: 1, padding: spacing.lg },
-  practiceBtn: { backgroundColor: colors.primary, borderRadius: radius.pill, paddingVertical: 15, alignItems: 'center' },
-  practiceBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
+  practiceBtn: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.pill,
+    paddingVertical: 18,
+    paddingHorizontal: spacing.xl,
+    minWidth: 220,
+    alignItems: 'center',
+  },
+  practiceBtnText: { color: '#fff', fontSize: 18, fontFamily: fonts.extraBold, textAlign: 'center' },
 
   // Memory game
   matchWrap: { flex: 1, padding: spacing.lg },
@@ -747,7 +754,7 @@ const styles = StyleSheet.create({
   // Listening game
   listenHint: { color: colors.textMuted, fontSize: 16, marginBottom: spacing.lg },
   listenBtn: { backgroundColor: colors.primary, borderRadius: radius.pill, paddingVertical: 14, paddingHorizontal: spacing.xl, marginBottom: spacing.xl },
-  listenBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
+  listenBtnText: { color: '#fff', fontSize: 16, fontFamily: fonts.extraBold },
   listenOptions: { width: '100%', gap: spacing.sm },
   listenOption: { backgroundColor: colors.surface, borderRadius: radius.md, paddingVertical: 16, alignItems: 'center', borderWidth: 2, borderColor: 'transparent' },
   listenOptionText: { color: colors.text, fontSize: 18, fontWeight: '700' },
@@ -759,7 +766,7 @@ const styles = StyleSheet.create({
   tfTranslation: { color: colors.primarySoft, fontSize: 24, fontWeight: '800' },
   tfRow: { flexDirection: 'row', gap: spacing.md },
   tfBtn: { backgroundColor: colors.surface, borderRadius: radius.md, paddingVertical: 16, paddingHorizontal: spacing.lg, alignItems: 'center', borderWidth: 2, borderColor: 'transparent' },
-  tfBtnText: { color: colors.text, fontSize: 17, fontWeight: '700' },
+  tfBtnText: { color: colors.text, fontSize: 17, fontFamily: fonts.bold },
 
   exitBtn: { marginTop: spacing.xl },
   exitText: { color: colors.textMuted, fontSize: 15 },

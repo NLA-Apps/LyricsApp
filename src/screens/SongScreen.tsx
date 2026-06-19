@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
-import { colors, radius, spacing } from '../theme';
+import { colors, fonts, radius, spacing } from '../theme';
 import { songs, normalizeWord, translateWord } from '../data/songs';
 import { speakLine, speakWord, stopSpeaking } from '../speech';
 
@@ -182,7 +182,7 @@ export default function SongScreen({ route, navigation }: any) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   topBar: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
-  back: { color: colors.primarySoft, fontSize: 17, fontWeight: '600' },
+  back: { color: colors.primarySoft, fontSize: 20, fontFamily: fonts.bold },
 
   songHeader: { alignItems: 'center', paddingHorizontal: spacing.lg, paddingBottom: spacing.md },
   cover: {

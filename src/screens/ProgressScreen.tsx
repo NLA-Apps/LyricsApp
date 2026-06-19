@@ -10,7 +10,7 @@ import {
   XP_PER_LEVEL,
 } from '../progress';
 import { getVocab } from '../vocab';
-import { colors, radius, spacing } from '../theme';
+import { colors, fonts, radius, spacing } from '../theme';
 
 function Bar({ value, color }: { value: number; color: string }) {
   return (
@@ -82,7 +82,7 @@ function Stat({ value, label }: { value: number | string; label: string }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   topBar: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
-  back: { color: colors.primarySoft, fontSize: 17, fontWeight: '600' },
+  back: { color: colors.primarySoft, fontSize: 20, fontFamily: fonts.bold },
   body: { padding: spacing.lg },
   title: { color: colors.text, fontSize: 28, fontWeight: '800', marginBottom: spacing.lg },
 

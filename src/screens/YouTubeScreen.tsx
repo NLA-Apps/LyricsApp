@@ -15,7 +15,7 @@ import { translateToHebrew, cachedTranslation } from '../translate';
 import { fetchJson } from '../net';
 import { isSaved, toggleWord } from '../vocab';
 import { defaultOffsets } from '../data/library';
-import { colors, radius, spacing } from '../theme';
+import { colors, fonts, radius, spacing } from '../theme';
 
 const cleanWord = (w: string) => w.replace(/[^a-zA-Z']/g, '').toLowerCase();
 
@@ -636,7 +636,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
   },
-  back: { color: colors.primarySoft, fontSize: 17, fontWeight: '600' },
+  back: { color: colors.primarySoft, fontSize: 20, fontFamily: fonts.bold },
   title: { color: colors.text, fontSize: 24, fontWeight: '800', paddingHorizontal: spacing.lg, marginBottom: spacing.md },
 
   inputRow: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.lg },
@@ -706,14 +706,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: spacing.md,
     paddingHorizontal: spacing.lg,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: radius.pill,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: colors.surfaceLight,
   },
   translateToggleActive: { backgroundColor: colors.surfaceLight, borderColor: colors.primary },
-  translateToggleText: { color: colors.textMuted, fontWeight: '700', fontSize: 14 },
-  translateToggleTextActive: { color: colors.text },
+  translateToggleText: { color: colors.text, fontFamily: fonts.extraBold, fontSize: 17 },
+  translateToggleTextActive: { color: colors.primarySoft },
 
   // Focused karaoke view
   karaoke: { paddingHorizontal: spacing.lg, paddingTop: spacing.xl, alignItems: 'center' },
