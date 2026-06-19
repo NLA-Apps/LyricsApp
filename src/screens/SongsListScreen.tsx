@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, fonts, radius, spacing } from '../theme';
 import { library, LibrarySong } from '../data/library';
@@ -110,9 +110,10 @@ export default function SongsListScreen({ navigation }: any) {
 function SongCard({ song, onPress }: { song: LibrarySong; onPress: () => void }) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
-      <View style={[styles.cover, { backgroundColor: song.accent }]}>
-        <Text style={styles.coverEmoji}>{song.emoji}</Text>
-      </View>
+      <Image
+        source={{ uri: `https://img.youtube.com/vi/${song.videoId}/mqdefault.jpg` }}
+        style={styles.cover}
+      />
       <View style={styles.cardBody}>
         <Text style={styles.songTitle}>{song.track}</Text>
         <Text style={styles.songArtist}>{song.artist}</Text>
@@ -181,10 +182,8 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: radius.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: colors.surfaceLight,
   },
-  coverEmoji: { fontSize: 30 },
   cardBody: { flex: 1, marginLeft: spacing.md },
   songTitle: { color: colors.text, fontSize: 17, fontWeight: '700' },
   songArtist: { color: colors.textMuted, fontSize: 13, marginTop: 2 },

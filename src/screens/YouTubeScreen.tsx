@@ -22,8 +22,6 @@ const cleanWord = (w: string) => w.replace(/[^a-zA-Z']/g, '').toLowerCase();
 
 // Show each line/translation slightly BEFORE it's sung, so it's easy to read ahead.
 const LOOKAHEAD = 0.4; // seconds
-// Extra lead time for per-word highlight — so the word lights up just before it's sung.
-const WORD_LOOKAHEAD = 0.6; // seconds
 
 // Per-song sync offset. A user's own saved calibration (localStorage) wins;
 // otherwise we use the built-in default so everyone gets it aligned.
@@ -437,12 +435,16 @@ export default function YouTubeScreen({ navigation, route }: any) {
         let acc = 0;
         const boundaries = weights.map((w) => (acc += w, (acc / totalWeight) * duration));
 
-        // On fast songs each word only gets a tiny slice of time, so cap the
-        // lookahead to a fraction of a single word's duration — otherwise it
-        // overshoots and the highlight races ahead of the singing.
+        // The lookahead scales with how fast the words go by: on a fast
+        // song each word is on screen briefly, so a small lead keeps it
+        // from racing ahead of the singing; on a slow song each word lasts
+        // much longer, so it can afford (and needs) a longer lead to avoid
+        // lagging behind. Built directly off the raw time (not `t`, which
+        // already carries the separate line-level LOOKAHEAD) — stacking
+        // both was the main reason fast songs overshot so badly.
         const avgWordDuration = duration / words.length;
-        const lookahead = Math.min(WORD_LOOKAHEAD, avgWordDuration * 0.8);
-        const elapsed = (t + lookahead) - lineStart;
+        const lookahead = Math.min(0.8, avgWordDuration * 0.9);
+        const elapsed = (getTime() + syncOffset + lookahead) - lineStart;
         let wi = boundaries.findIndex((b) => elapsed < b);
         if (wi === -1) wi = words.length - 1;
         setCurrentWord(wi);
