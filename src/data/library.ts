@@ -24,6 +24,16 @@ export const defaultOffsets: Record<string, number> = {
   'C7dPqrmDWxs': -0.3, // Pharrell Williams – Happy
 };
 
+// videoIds whose lyrics + word-timing were pulled straight from that exact
+// YouTube video's own official captions (so they're guaranteed to match the
+// edit/version embedded in the app). Everything else came from a separate
+// lyrics database (LRCLIB) that was matched by song name/duration.
+export const youtubeSourcedLyrics = new Set<string>([
+  'UXWFqxKU2qA', // Snoop Dogg – Vato
+  'CaCSuzR4DwM', // Louis Armstrong – What A Wonderful World
+  'EkHTsc9PU2A', // Jason Mraz – I'm Yours
+]);
+
 export const library: LibrarySong[] = [
   { videoId: 'RBumgq5yVrA', artist: 'Passenger', track: 'Let Her Go', emoji: '🎸', accent: '#6c5ce7' },
   { videoId: 'GBSu_ltDu1w', artist: 'The Beatles', track: 'Blackbird', emoji: '🐦', accent: '#0984e3' },
