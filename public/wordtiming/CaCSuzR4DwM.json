@@ -1,772 +1,794 @@
 {
-  "00:05.47": [
+  "00:06.60": [
     {
       "word": "I",
-      "start": 7.014,
-      "end": 7.154,
-      "score": 0.8
+      "start": 6.961,
+      "end": 7.102,
+      "score": 0.966
     },
     {
-      "word": "see",
-      "start": 7.275,
-      "end": 7.555,
-      "score": 0.806
+      "word": "SEE",
+      "start": 7.223,
+      "end": 7.544,
+      "score": 0.921
     },
     {
-      "word": "trees",
-      "start": 7.616,
-      "end": 8.458,
-      "score": 0.643
+      "word": "TREES",
+      "start": 7.604,
+      "end": 8.428,
+      "score": 0.706
     },
     {
-      "word": "of",
-      "start": 8.598,
-      "end": 8.678,
-      "score": 0.39
-    },
-    {
-      "word": "green,",
-      "start": 8.839,
-      "end": 9.119,
-      "score": 0.4
-    },
-    {
-      "word": "red",
-      "start": 9.18,
-      "end": 9.24,
-      "score": 0.008
-    },
-    {
-      "word": "roses",
-      "start": 11.626,
-      "end": 12.749,
-      "score": 0.453
-    },
-    {
-      "word": "too",
-      "start": 12.829,
-      "end": 12.989,
-      "score": 0.358
-    }
-  ],
-  "00:13.27": [
-    {
-      "word": "I",
-      "start": 15.314,
-      "end": 15.454,
-      "score": 0.86
-    },
-    {
-      "word": "see",
-      "start": 15.534,
-      "end": 15.754,
-      "score": 0.985
-    },
-    {
-      "word": "them",
-      "start": 15.814,
-      "end": 16.075,
-      "score": 0.853
-    },
-    {
-      "word": "bloom",
-      "start": 16.335,
-      "end": 16.916,
-      "score": 0.815
-    },
-    {
-      "word": "for",
-      "start": 17.277,
-      "end": 17.477,
-      "score": 0.443
-    },
-    {
-      "word": "me",
-      "start": 17.537,
-      "end": 17.718,
-      "score": 0.697
-    },
-    {
-      "word": "and",
-      "start": 17.878,
-      "end": 17.958,
-      "score": 0.166
-    },
-    {
-      "word": "for",
-      "start": 18.038,
-      "end": 18.619,
-      "score": 0.848
-    },
-    {
-      "word": "you",
-      "start": 18.78,
-      "end": 18.94,
-      "score": 0.301
-    }
-  ],
-  "00:19.06": [
-    {
-      "word": "And",
-      "start": 19.261,
-      "end": 19.341,
-      "score": 0.959
-    },
-    {
-      "word": "I",
-      "start": 19.361,
-      "end": 19.381,
-      "score": 0.0
-    },
-    {
-      "word": "think",
-      "start": 19.401,
-      "end": 19.803,
-      "score": 0.323
-    },
-    {
-      "word": "to",
-      "start": 19.843,
-      "end": 19.883,
-      "score": 0.004
-    },
-    {
-      "word": "myself",
-      "start": 19.903,
-      "end": 20.024,
-      "score": 0.0
-    }
-  ],
-  "00:24.26": [
-    {
-      "word": "What",
-      "start": 26.383,
-      "end": 26.683,
-      "score": 0.854
-    },
-    {
-      "word": "a",
-      "start": 26.763,
-      "end": 26.843,
-      "score": 0.539
-    },
-    {
-      "word": "wonderful",
-      "start": 26.903,
-      "end": 27.825,
-      "score": 0.89
-    },
-    {
-      "word": "world",
-      "start": 27.885,
-      "end": 28.505,
-      "score": 0.46
-    }
-  ],
-  "00:32.07": [
-    {
-      "word": "I",
-      "start": 32.191,
-      "end": 32.291,
-      "score": 0.759
-    },
-    {
-      "word": "see",
-      "start": 32.331,
-      "end": 32.653,
-      "score": 0.738
-    },
-    {
-      "word": "skies",
-      "start": 32.673,
-      "end": 33.095,
-      "score": 0.525
-    },
-    {
-      "word": "of",
-      "start": 33.195,
-      "end": 33.316,
-      "score": 0.427
-    },
-    {
-      "word": "blue",
-      "start": 33.416,
-      "end": 33.577,
-      "score": 0.394
-    },
-    {
-      "word": "and",
-      "start": 33.898,
-      "end": 33.999,
-      "score": 0.264
-    },
-    {
-      "word": "clouds",
-      "start": 34.019,
-      "end": 34.26,
-      "score": 0.413
-    },
-    {
-      "word": "of",
-      "start": 34.28,
-      "end": 34.963,
-      "score": 0.841
-    },
-    {
-      "word": "white",
-      "start": 35.304,
-      "end": 35.847,
-      "score": 0.727
-    }
-  ],
-  "00:36.55": [
-    {
-      "word": "The",
-      "start": 36.81,
-      "end": 37.111,
-      "score": 0.438
-    },
-    {
-      "word": "bright",
-      "start": 37.131,
-      "end": 37.411,
-      "score": 0.411
-    },
-    {
-      "word": "blessed",
-      "start": 37.491,
-      "end": 37.631,
-      "score": 0.008
-    },
-    {
-      "word": "days,",
-      "start": 37.651,
-      "end": 37.891,
-      "score": 0.417
-    },
-    {
-      "word": "dark",
-      "start": 37.971,
-      "end": 38.192,
-      "score": 0.502
-    },
-    {
-      "word": "sacred",
-      "start": 38.252,
-      "end": 38.832,
-      "score": 0.604
-    },
-    {
-      "word": "nights",
-      "start": 38.993,
-      "end": 39.173,
-      "score": 0.234
-    }
-  ],
-  "00:46.06": [
-    {
-      "word": "And",
-      "start": 46.422,
-      "end": 46.683,
-      "score": 0.526
-    },
-    {
-      "word": "I",
-      "start": 46.703,
-      "end": 46.723,
-      "score": 0.0
-    },
-    {
-      "word": "think",
-      "start": 46.783,
-      "end": 47.024,
-      "score": 0.663
-    },
-    {
-      "word": "to",
-      "start": 47.064,
-      "end": 47.185,
+      "word": "OF",
+      "start": 8.548,
+      "end": 8.648,
       "score": 0.497
     },
     {
-      "word": "myself",
-      "start": 47.265,
-      "end": 47.968,
-      "score": 0.533
+      "word": "GREEN",
+      "start": 8.809,
+      "end": 9.151,
+      "score": 0.512
     }
   ],
-  "00:50.82": [
+  "00:11.44": [
     {
-      "word": "What",
-      "start": 54.328,
-      "end": 54.629,
-      "score": 0.671
+      "word": "RED",
+      "start": 11.601,
+      "end": 11.802,
+      "score": 0.631
     },
     {
-      "word": "a",
-      "start": 54.729,
-      "end": 54.81,
-      "score": 0.689
+      "word": "ROSES",
+      "start": 12.023,
+      "end": 13.19,
+      "score": 0.78
     },
     {
-      "word": "wonderful",
-      "start": 54.85,
-      "end": 55.852,
-      "score": 0.753
-    },
-    {
-      "word": "world",
-      "start": 55.912,
-      "end": 56.253,
-      "score": 0.245
+      "word": "TOO",
+      "start": 14.618,
+      "end": 14.88,
+      "score": 0.498
     }
   ],
-  "00:59.20": [
+  "00:14.88": [
     {
-      "word": "The",
-      "start": 63.052,
-      "end": 63.193,
-      "score": 0.888
+      "word": "I",
+      "start": 15.282,
+      "end": 15.403,
+      "score": 0.961
     },
     {
-      "word": "colors",
-      "start": 63.313,
-      "end": 63.754,
-      "score": 0.85
+      "word": "SEE",
+      "start": 15.483,
+      "end": 15.725,
+      "score": 0.863
     },
     {
-      "word": "of",
-      "start": 63.835,
-      "end": 63.915,
-      "score": 0.93
+      "word": "THEM",
+      "start": 15.785,
+      "end": 16.006,
+      "score": 0.749
     },
     {
-      "word": "the",
-      "start": 63.995,
-      "end": 64.095,
-      "score": 0.932
-    },
-    {
-      "word": "rainbow,",
-      "start": 64.156,
-      "end": 64.657,
-      "score": 0.587
-    },
-    {
-      "word": "so",
-      "start": 64.677,
-      "end": 64.717,
-      "score": 0.002
-    },
-    {
-      "word": "pretty",
-      "start": 64.737,
-      "end": 65.079,
-      "score": 0.274
-    },
-    {
-      "word": "in",
-      "start": 65.099,
-      "end": 65.139,
-      "score": 0.0
-    },
-    {
-      "word": "the",
-      "start": 65.159,
-      "end": 65.219,
-      "score": 0.0
-    },
-    {
-      "word": "sky",
-      "start": 65.239,
-      "end": 65.52,
-      "score": 0.306
+      "word": "BLOOM",
+      "start": 16.288,
+      "end": 16.67,
+      "score": 0.582
     }
   ],
-  "01:05.54": [
+  "00:18.56": [
     {
-      "word": "Are",
-      "start": 66.421,
-      "end": 66.662,
+      "word": "FOR",
+      "start": 18.742,
+      "end": 18.964,
+      "score": 0.796
+    },
+    {
+      "word": "ME",
+      "start": 19.024,
+      "end": 19.165,
+      "score": 0.976
+    },
+    {
+      "word": "AND",
+      "start": 19.226,
+      "end": 19.307,
       "score": 0.542
     },
     {
-      "word": "also",
-      "start": 66.982,
-      "end": 67.203,
-      "score": 0.399
-    },
-    {
-      "word": "on",
-      "start": 67.283,
-      "end": 67.363,
-      "score": 0.474
-    },
-    {
-      "word": "the",
-      "start": 67.403,
-      "end": 67.503,
-      "score": 0.428
-    },
-    {
-      "word": "faces",
-      "start": 67.543,
-      "end": 68.364,
-      "score": 0.684
-    },
-    {
-      "word": "of",
-      "start": 68.785,
-      "end": 68.905,
-      "score": 0.435
-    },
-    {
-      "word": "people",
-      "start": 68.945,
-      "end": 69.446,
-      "score": 0.44
-    },
-    {
-      "word": "going",
-      "start": 70.308,
-      "end": 70.788,
-      "score": 0.407
-    },
-    {
-      "word": "by",
-      "start": 70.808,
-      "end": 70.868,
-      "score": 0.243
+      "word": "YOU",
+      "start": 19.387,
+      "end": 19.589,
+      "score": 0.663
     }
   ],
-  "01:11.85": [
+  "00:20.84": [
     {
-      "word": "I",
-      "start": 71.87,
-      "end": 71.97,
-      "score": 0.674
-    },
-    {
-      "word": "see",
-      "start": 71.99,
-      "end": 72.131,
-      "score": 0.646
-    },
-    {
-      "word": "friends",
-      "start": 72.151,
-      "end": 72.572,
-      "score": 0.609
-    },
-    {
-      "word": "shaking",
-      "start": 72.592,
-      "end": 74.436,
-      "score": 0.698
-    },
-    {
-      "word": "hands,",
-      "start": 74.476,
-      "end": 74.797,
-      "score": 0.616
-    },
-    {
-      "word": "saying,",
-      "start": 74.877,
-      "end": 75.459,
-      "score": 0.63
-    },
-    {
-      "word": "\"How",
-      "start": 75.78,
-      "end": 77.143,
-      "score": 0.735
-    },
-    {
-      "word": "do",
-      "start": 77.203,
-      "end": 77.484,
-      "score": 0.71
-    },
-    {
-      "word": "you",
-      "start": 77.885,
-      "end": 78.226,
-      "score": 0.504
-    },
-    {
-      "word": "do?\"",
-      "start": 78.286,
-      "end": 78.567,
-      "score": 0.717
-    }
-  ],
-  "01:19.95": [
-    {
-      "word": "They're",
-      "start": 79.99,
-      "end": 80.271,
-      "score": 0.316
-    },
-    {
-      "word": "really",
-      "start": 80.351,
-      "end": 80.631,
-      "score": 0.419
-    },
-    {
-      "word": "sayin',",
-      "start": 80.791,
-      "end": 81.452,
-      "score": 0.736
-    },
-    {
-      "word": "\"I",
-      "start": 81.573,
-      "end": 82.294,
-      "score": 0.726
-    },
-    {
-      "word": "love",
-      "start": 82.314,
-      "end": 82.614,
-      "score": 0.706
-    },
-    {
-      "word": "you\"",
-      "start": 82.775,
-      "end": 82.935,
-      "score": 0.463
-    }
-  ],
-  "01:25.98": [
-    {
-      "word": "I",
-      "start": 86.0,
-      "end": 86.04,
-      "score": 0.507
-    },
-    {
-      "word": "hear",
-      "start": 86.06,
-      "end": 86.261,
-      "score": 0.384
-    },
-    {
-      "word": "babies",
-      "start": 86.301,
-      "end": 86.602,
-      "score": 0.313
-    },
-    {
-      "word": "cry,",
-      "start": 86.682,
-      "end": 87.665,
-      "score": 0.692
+      "word": "AND",
+      "start": 21.021,
+      "end": 21.141,
+      "score": 0.795
     },
     {
       "word": "I",
-      "start": 87.825,
-      "end": 87.945,
-      "score": 0.706
+      "start": 21.282,
+      "end": 21.382,
+      "score": 0.766
     },
     {
-      "word": "watch",
-      "start": 88.427,
-      "end": 89.289,
-      "score": 0.617
+      "word": "THINK",
+      "start": 21.483,
+      "end": 21.744,
+      "score": 0.857
     },
     {
-      "word": "them",
-      "start": 89.369,
-      "end": 89.61,
-      "score": 0.517
+      "word": "TO",
+      "start": 21.804,
+      "end": 21.965,
+      "score": 0.882
     },
     {
-      "word": "grow",
-      "start": 89.63,
-      "end": 90.051,
-      "score": 0.594
+      "word": "MYSELF",
+      "start": 22.005,
+      "end": 22.687,
+      "score": 0.864
     }
   ],
-  "01:33.24": [
+  "00:25.80": [
     {
-      "word": "They'll",
-      "start": 93.681,
-      "end": 93.862,
-      "score": 0.1
+      "word": "WHAT",
+      "start": 26.341,
+      "end": 26.642,
+      "score": 0.89
     },
     {
-      "word": "learn",
-      "start": 94.063,
-      "end": 94.464,
-      "score": 0.535
+      "word": "A",
+      "start": 26.722,
+      "end": 26.803,
+      "score": 0.77
     },
     {
-      "word": "much",
-      "start": 96.189,
-      "end": 96.47,
-      "score": 0.38
+      "word": "WONDERFUL",
+      "start": 26.883,
+      "end": 27.805,
+      "score": 0.865
     },
     {
-      "word": "more",
-      "start": 96.611,
-      "end": 96.992,
+      "word": "WORLD",
+      "start": 27.865,
+      "end": 28.327,
+      "score": 0.523
+    }
+  ],
+  "00:33.52": [
+    {
+      "word": "I",
+      "start": 33.881,
+      "end": 34.222,
+      "score": 0.816
+    },
+    {
+      "word": "SEE",
+      "start": 34.403,
+      "end": 34.905,
+      "score": 0.898
+    },
+    {
+      "word": "SKIES",
+      "start": 35.085,
+      "end": 35.988,
+      "score": 0.813
+    },
+    {
+      "word": "OF",
+      "start": 36.149,
+      "end": 36.229,
+      "score": 0.832
+    },
+    {
+      "word": "BLUE",
+      "start": 36.31,
+      "end": 36.731,
+      "score": 0.901
+    }
+  ],
+  "00:39.36": [
+    {
+      "word": "AND",
+      "start": 39.521,
+      "end": 39.581,
+      "score": 0.015
+    },
+    {
+      "word": "CLOUDS",
+      "start": 39.662,
+      "end": 40.647,
+      "score": 0.905
+    },
+    {
+      "word": "OF",
+      "start": 40.788,
+      "end": 40.869,
+      "score": 0.905
+    },
+    {
+      "word": "WHITE",
+      "start": 40.989,
+      "end": 41.311,
+      "score": 0.859
+    }
+  ],
+  "00:42.84": [
+    {
+      "word": "BRIGHT",
+      "start": 42.941,
+      "end": 43.222,
+      "score": 0.765
+    },
+    {
+      "word": "BLESSED",
+      "start": 43.303,
+      "end": 43.866,
+      "score": 0.887
+    },
+    {
+      "word": "DAYS",
+      "start": 44.168,
+      "end": 44.772,
+      "score": 0.956
+    }
+  ],
+  "00:46.08": [
+    {
+      "word": "DARK",
+      "start": 46.181,
+      "end": 46.684,
+      "score": 0.659
+    },
+    {
+      "word": "SACRED",
+      "start": 46.725,
+      "end": 47.148,
+      "score": 0.839
+    },
+    {
+      "word": "NIGHTS",
+      "start": 47.208,
+      "end": 47.531,
+      "score": 0.314
+    }
+  ],
+  "00:48.80": [
+    {
+      "word": "AND",
+      "start": 49.161,
+      "end": 49.242,
+      "score": 0.5
+    },
+    {
+      "word": "I",
+      "start": 49.362,
+      "end": 49.463,
       "score": 0.541
     },
     {
-      "word": "than",
-      "start": 97.132,
-      "end": 97.353,
-      "score": 0.615
+      "word": "THINK",
+      "start": 49.563,
+      "end": 49.784,
+      "score": 0.521
     },
     {
-      "word": "I'll",
-      "start": 97.794,
-      "end": 98.356,
-      "score": 0.576
+      "word": "TO",
+      "start": 49.844,
+      "end": 50.085,
+      "score": 0.653
     },
     {
-      "word": "never",
-      "start": 98.416,
-      "end": 98.938,
-      "score": 0.725
-    },
-    {
-      "word": "know",
-      "start": 98.978,
-      "end": 99.098,
-      "score": 0.244
+      "word": "MYSELF",
+      "start": 50.125,
+      "end": 50.788,
+      "score": 0.537
     }
   ],
-  "01:39.62": [
+  "00:54.00": [
     {
-      "word": "And",
-      "start": 99.68,
-      "end": 99.801,
-      "score": 0.389
+      "word": "WHAT",
+      "start": 54.301,
+      "end": 54.581,
+      "score": 0.779
+    },
+    {
+      "word": "A",
+      "start": 54.682,
+      "end": 54.782,
+      "score": 0.64
+    },
+    {
+      "word": "WONDERFUL",
+      "start": 54.822,
+      "end": 55.804,
+      "score": 0.726
+    },
+    {
+      "word": "WORLD",
+      "start": 55.864,
+      "end": 56.245,
+      "score": 0.297
+    }
+  ],
+  "01:02.72": [
+    {
+      "word": "THE",
+      "start": 63.002,
+      "end": 63.163,
+      "score": 0.904
+    },
+    {
+      "word": "COLORS",
+      "start": 63.263,
+      "end": 63.726,
+      "score": 0.861
+    },
+    {
+      "word": "OF",
+      "start": 63.806,
+      "end": 63.887,
+      "score": 0.766
+    },
+    {
+      "word": "THE",
+      "start": 63.967,
+      "end": 64.048,
+      "score": 0.965
+    },
+    {
+      "word": "RAINBOW",
+      "start": 64.108,
+      "end": 64.551,
+      "score": 0.481
+    }
+  ],
+  "01:06.12": [
+    {
+      "word": "SO",
+      "start": 66.401,
+      "end": 66.623,
+      "score": 0.998
+    },
+    {
+      "word": "PRETTY",
+      "start": 66.783,
+      "end": 67.165,
+      "score": 0.943
+    },
+    {
+      "word": "IN",
+      "start": 67.246,
+      "end": 67.326,
+      "score": 0.762
+    },
+    {
+      "word": "THE",
+      "start": 67.366,
+      "end": 67.467,
+      "score": 0.525
+    },
+    {
+      "word": "SKYS",
+      "start": 67.507,
+      "end": 68.231,
+      "score": 0.747
+    }
+  ],
+  "01:09.96": [
+    {
+      "word": "ARE",
+      "start": 70.624,
+      "end": 70.745,
+      "score": 0.434
+    },
+    {
+      "word": "ALSO",
+      "start": 70.805,
+      "end": 71.207,
+      "score": 0.77
+    },
+    {
+      "word": "ON",
+      "start": 71.348,
+      "end": 71.489,
+      "score": 0.794
+    },
+    {
+      "word": "THE",
+      "start": 71.509,
+      "end": 71.61,
+      "score": 0.215
+    },
+    {
+      "word": "FACES",
+      "start": 71.69,
+      "end": 72.133,
+      "score": 0.608
+    }
+  ],
+  "01:13.32": [
+    {
+      "word": "OF",
+      "start": 73.682,
+      "end": 73.763,
+      "score": 0.382
+    },
+    {
+      "word": "PEOPLE",
+      "start": 74.004,
+      "end": 74.387,
+      "score": 0.686
+    },
+    {
+      "word": "GOING",
+      "start": 74.447,
+      "end": 74.769,
+      "score": 0.678
+    },
+    {
+      "word": "BY",
+      "start": 74.849,
+      "end": 75.272,
+      "score": 0.947
+    }
+  ],
+  "01:16.56": [
+    {
+      "word": "I",
+      "start": 76.902,
+      "end": 77.063,
+      "score": 0.912
+    },
+    {
+      "word": "SEE",
+      "start": 77.163,
+      "end": 77.465,
+      "score": 0.867
+    },
+    {
+      "word": "FRIENDS",
+      "start": 77.585,
+      "end": 78.449,
+      "score": 0.623
+    },
+    {
+      "word": "SHAKING",
+      "start": 78.49,
+      "end": 78.992,
+      "score": 0.585
+    },
+    {
+      "word": "HANDS",
+      "start": 79.052,
+      "end": 79.374,
+      "score": 0.68
+    }
+  ],
+  "01:20.56": [
+    {
+      "word": "SAYING,",
+      "start": 80.761,
+      "end": 81.364,
+      "score": 0.687
+    },
+    {
+      "word": "\"HOW",
+      "start": 81.544,
+      "end": 82.268,
+      "score": 0.454
+    },
+    {
+      "word": "DO",
+      "start": 82.288,
+      "end": 82.589,
+      "score": 0.974
+    },
+    {
+      "word": "YOU",
+      "start": 82.71,
+      "end": 82.83,
+      "score": 0.811
+    },
+    {
+      "word": "DO?\"",
+      "start": 83.071,
+      "end": 83.393,
+      "score": 0.76
+    }
+  ],
+  "01:24.96": [
+    {
+      "word": "THEY'RE",
+      "start": 85.141,
+      "end": 85.906,
+      "score": 0.537
+    },
+    {
+      "word": "REALLY",
+      "start": 86.087,
+      "end": 86.57,
+      "score": 0.697
+    },
+    {
+      "word": "SAYING",
+      "start": 86.65,
+      "end": 87.415,
+      "score": 0.808
+    }
+  ],
+  "01:28.20": [
+    {
+      "word": "I",
+      "start": 88.965,
+      "end": 89.308,
+      "score": 0.899
+    },
+    {
+      "word": "LOVE",
+      "start": 89.348,
+      "end": 89.932,
+      "score": 0.79
+    },
+    {
+      "word": "YOU",
+      "start": 90.073,
+      "end": 90.154,
+      "score": 0.179
+    }
+  ],
+  "01:31.04": [
+    {
+      "word": "I",
+      "start": 91.381,
+      "end": 91.502,
+      "score": 0.762
+    },
+    {
+      "word": "HEAR",
+      "start": 91.602,
+      "end": 91.883,
+      "score": 0.499
+    },
+    {
+      "word": "BABIES",
+      "start": 91.984,
+      "end": 92.506,
+      "score": 0.755
+    },
+    {
+      "word": "CRYIN'",
+      "start": 92.586,
+      "end": 93.289,
+      "score": 0.531
+    }
+  ],
+  "01:36.04": [
+    {
+      "word": "I",
+      "start": 96.281,
+      "end": 96.422,
+      "score": 0.813
+    },
+    {
+      "word": "WATCH",
+      "start": 96.563,
+      "end": 96.945,
+      "score": 0.827
+    },
+    {
+      "word": "THEM",
+      "start": 97.106,
+      "end": 97.287,
+      "score": 0.845
+    },
+    {
+      "word": "GROW",
+      "start": 97.428,
+      "end": 97.81,
+      "score": 0.721
+    }
+  ],
+  "01:39.56": [
+    {
+      "word": "THEY'LL",
+      "start": 99.842,
+      "end": 100.485,
+      "score": 0.564
+    },
+    {
+      "word": "LEARN",
+      "start": 100.606,
+      "end": 100.888,
+      "score": 0.542
+    },
+    {
+      "word": "MUCH",
+      "start": 101.008,
+      "end": 101.29,
+      "score": 0.96
+    },
+    {
+      "word": "MORE",
+      "start": 101.431,
+      "end": 101.773,
+      "score": 0.942
+    }
+  ],
+  "01:43.08": [
+    {
+      "word": "THAN",
+      "start": 103.12,
+      "end": 103.523,
+      "score": 0.235
+    },
+    {
+      "word": "I'LL",
+      "start": 103.785,
+      "end": 103.946,
+      "score": 0.597
+    },
+    {
+      "word": "EVER",
+      "start": 104.067,
+      "end": 104.269,
+      "score": 0.928
+    },
+    {
+      "word": "KNOW",
+      "start": 104.329,
+      "end": 104.611,
+      "score": 0.823
+    }
+  ],
+  "01:45.84": [
+    {
+      "word": "AND",
+      "start": 106.161,
+      "end": 106.282,
+      "score": 0.595
     },
     {
       "word": "I",
-      "start": 99.821,
-      "end": 99.841,
-      "score": 0.0
+      "start": 106.442,
+      "end": 106.583,
+      "score": 0.72
     },
     {
-      "word": "think",
-      "start": 99.881,
-      "end": 100.483,
-      "score": 0.638
+      "word": "THINK",
+      "start": 106.723,
+      "end": 107.064,
+      "score": 0.402
     },
     {
-      "word": "to",
-      "start": 100.504,
-      "end": 100.544,
-      "score": 0.001
+      "word": "TO",
+      "start": 107.084,
+      "end": 107.285,
+      "score": 0.62
     },
     {
-      "word": "myself",
-      "start": 100.644,
-      "end": 100.945,
-      "score": 0.492
+      "word": "MYSELF",
+      "start": 107.325,
+      "end": 109.092,
+      "score": 0.718
     }
   ],
-  "01:44.64": [
+  "01:51.40": [
     {
-      "word": "What",
-      "start": 106.044,
-      "end": 106.325,
-      "score": 0.67
+      "word": "WHAT",
+      "start": 111.661,
+      "end": 111.962,
+      "score": 0.931
     },
     {
-      "word": "a",
-      "start": 106.506,
-      "end": 106.626,
-      "score": 0.671
+      "word": "A",
+      "start": 112.042,
+      "end": 112.122,
+      "score": 0.87
     },
     {
-      "word": "wonderful",
-      "start": 106.787,
-      "end": 109.215,
-      "score": 0.719
+      "word": "WONDERFUL",
+      "start": 112.202,
+      "end": 112.583,
+      "score": 0.342
     },
     {
-      "word": "world",
-      "start": 109.275,
-      "end": 109.857,
-      "score": 0.575
+      "word": "WORLD",
+      "start": 112.663,
+      "end": 112.884,
+      "score": 0.462
     }
   ],
-  "01:50.90": [
+  "01:58.64": [
     {
-      "word": "Yes,",
-      "start": 111.702,
-      "end": 112.003,
-      "score": 0.719
+      "word": "YES,",
+      "start": 118.961,
+      "end": 120.224,
+      "score": 0.87
     },
     {
       "word": "I",
-      "start": 112.083,
-      "end": 112.163,
-      "score": 0.691
+      "start": 120.524,
+      "end": 120.665,
+      "score": 0.708
     },
     {
-      "word": "think",
-      "start": 112.223,
-      "end": 112.564,
-      "score": 0.545
+      "word": "THINK",
+      "start": 120.705,
+      "end": 121.266,
+      "score": 0.773
     },
     {
-      "word": "to",
-      "start": 112.584,
-      "end": 112.624,
-      "score": 0.019
+      "word": "TO",
+      "start": 121.346,
+      "end": 121.647,
+      "score": 0.908
     },
     {
-      "word": "myself",
-      "start": 112.705,
-      "end": 113.046,
-      "score": 0.538
+      "word": "MYSELF",
+      "start": 121.667,
+      "end": 122.97,
+      "score": 0.523
     }
   ],
-  "01:58.58": [
+  "02:07.56": [
     {
-      "word": "What",
-      "start": 118.66,
-      "end": 118.92,
-      "score": 0.381
+      "word": "WHAT",
+      "start": 127.941,
+      "end": 128.221,
+      "score": 0.653
     },
     {
-      "word": "a",
-      "start": 118.94,
-      "end": 118.96,
-      "score": 0.0
+      "word": "A",
+      "start": 128.361,
+      "end": 128.462,
+      "score": 0.663
     },
     {
-      "word": "wonderful",
-      "start": 119.0,
-      "end": 120.262,
-      "score": 0.598
+      "word": "WONDERFUL",
+      "start": 128.502,
+      "end": 129.083,
+      "score": 0.678
     },
     {
-      "word": "world",
-      "start": 120.362,
-      "end": 120.662,
-      "score": 0.362
+      "word": "WORLD",
+      "start": 129.163,
+      "end": 130.305,
+      "score": 0.647
     }
   ],
-  "02:08.57": [
+  "02:18.52": [
     {
-      "word": "Oh,",
-      "start": 128.63,
-      "end": 128.811,
-      "score": 0.4
+      "word": "OOH,",
+      "start": 138.52,
+      "end": 138.821,
+      "score": 0.527
     },
     {
-      "word": "yes",
-      "start": 128.891,
-      "end": 129.052,
-      "score": 0.281
+      "word": "YES",
+      "start": 138.841,
+      "end": 139.002,
+      "score": 0.391
+    }
+  ],
+  "02:23.96": [
+    {
+      "word": "[AUDIENCE",
+      "start": 143.96,
+      "end": 144.771,
+      "score": 0.055
+    },
+    {
+      "word": "APPLAUDS]",
+      "start": 144.852,
+      "end": 147.203,
+      "score": 0.273
     }
   ]
 }
