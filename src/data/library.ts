@@ -22,6 +22,7 @@ export const defaultOffsets: Record<string, number> = {
   'YQHsXMglC9A': -63.4, // Adele – Hello
   'oyEuk8j8imI': -9.9, // Justin Bieber – Love Yourself
   'CaCSuzR4DwM': -1.7, // Louis Armstrong – What A Wonderful World
+  'WDaNJW_jEBo': -32.2, // Busta Rhymes ft. Mariah Carey – I Know What You Want
 };
 
 export const library: LibrarySong[] = [

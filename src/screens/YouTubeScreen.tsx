@@ -749,6 +749,24 @@ export default function YouTubeScreen({ navigation, route }: any) {
                         </Text>
                       </TouchableOpacity>
                     )}
+                    {/* Copy the line(s) currently on screen to the clipboard —
+                        an explicit button instead of relying on click-drag
+                        text selection, which the per-word tap targets would
+                        otherwise interfere with. */}
+                    {cur.text && (
+                      <TouchableOpacity
+                        style={styles.lineActionBtn}
+                        onPress={async () => {
+                          const parts = [];
+                          if (displayMode !== 'he') parts.push(cur.text);
+                          if (displayMode !== 'en') parts.push(lineHe(idx));
+                          await Clipboard.setStringAsync(parts.join('\n'));
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <MaterialIcons name="content-copy" size={22} color={colors.textFaint} />
+                      </TouchableOpacity>
+                    )}
                   </View>
                 </View>
 
