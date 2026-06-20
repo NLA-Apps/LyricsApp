@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialIcons } from '@expo/vector-icons';
 import { colors, fonts, radius, spacing } from '../theme';
 import { library, LibrarySong, youtubeSourcedLyrics } from '../data/library';
 import { getProgress, getLevel, xpIntoLevel } from '../progress';
@@ -135,7 +136,7 @@ export default function SongsListScreen({ navigation }: any) {
             <Text style={styles.countLabel}>
               {allSongs.length} {allSongs.length === 1 ? 'שיר' : 'שירים'} בספרייה
             </Text>
-            <Text style={styles.legendLabel}>▶︎ = מילים ותזמון מהכתוביות הרשמיות של סרטון היוטיוב</Text>
+            <Text style={styles.legendLabel}>סימן 🔤 אדום ליד הנגן = מילים ותזמון מהכתוביות הרשמיות של סרטון היוטיוב</Text>
           </>
         }
       />
@@ -152,15 +153,15 @@ function SongCard({ song, number, onPress }: { song: LibrarySong; number: number
         style={styles.cover}
       />
       <View style={styles.cardBody}>
-        <View style={styles.titleRow}>
-          <Text style={styles.songTitle}>{song.track}</Text>
-          {youtubeSourcedLyrics.has(song.videoId) && (
-            <Text style={styles.sourceBadge}>▶︎</Text>
-          )}
-        </View>
+        <Text style={styles.songTitle}>{song.track}</Text>
         <Text style={styles.songArtist}>{song.artist}</Text>
       </View>
-      <Text style={styles.play}>▶</Text>
+      <View style={styles.playCol}>
+        {youtubeSourcedLyrics.has(song.videoId) && (
+          <MaterialIcons name="translate" size={14} color={colors.danger} style={styles.sourceBadge} />
+        )}
+        <Text style={styles.play}>▶</Text>
+      </View>
     </TouchableOpacity>
   );
 }
@@ -228,11 +229,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceLight,
   },
   cardBody: { flex: 1, marginLeft: spacing.md },
-  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   songTitle: { color: colors.text, fontSize: 17, fontWeight: '700' },
-  sourceBadge: { color: colors.success, fontSize: 11 },
   songArtist: { color: colors.textMuted, fontSize: 13, marginTop: 2 },
-  play: { color: colors.primarySoft, fontSize: 20, paddingHorizontal: spacing.md },
+  playCol: { alignItems: 'center', paddingHorizontal: spacing.md },
+  sourceBadge: { marginBottom: 2 },
+  play: { color: colors.primarySoft, fontSize: 20 },
 
   pager: {
     flexDirection: 'row',

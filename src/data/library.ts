@@ -19,7 +19,6 @@ export const defaultOffsets: Record<string, number> = {
   'Xg72z08aTXY': -0.5, // Måneskin – Beggin'
   'Zi_XLOBDo_Y': -0.6, // Michael Jackson – Billie Jean
   'oyEuk8j8imI': -9.9, // Justin Bieber – Love Yourself
-  'WDaNJW_jEBo': -32.2, // Busta Rhymes ft. Mariah Carey – I Know What You Want
   'C7dPqrmDWxs': -0.3, // Pharrell Williams – Happy
 };
 
@@ -34,6 +33,8 @@ export const youtubeSourcedLyrics = new Set<string>([
   'YQHsXMglC9A', // Adele – Hello
   'hLQl3WQQoQ0', // Adele – Someone Like You
   'EkHTsc9PU2A', // Jason Mraz – I'm Yours
+  'kPBzTxZQG5Q', // 3 Doors Down – Here Without You
+  'WDaNJW_jEBo', // Busta Rhymes ft. Mariah Carey – I Know What You Want
 ]);
 
 export const library: LibrarySong[] = [
