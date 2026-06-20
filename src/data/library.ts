@@ -36,6 +36,7 @@ export const youtubeSourcedLyrics = new Set<string>([
   'EkHTsc9PU2A', // Jason Mraz – I'm Yours
   'kPBzTxZQG5Q', // 3 Doors Down – Here Without You
   'WDaNJW_jEBo', // Busta Rhymes ft. Mariah Carey – I Know What You Want
+  'pfxyk1glEq4', // Chris Brown – Under The Influence
 ]);
 
 export const library: LibrarySong[] = [
@@ -74,4 +75,5 @@ export const library: LibrarySong[] = [
   { videoId: 'C7dPqrmDWxs', artist: 'Pharrell Williams', track: 'Happy', emoji: '😄', accent: '#fdcb6e' },
   { videoId: 'UXWFqxKU2qA', artist: 'Snoop Dogg', track: 'Vato', emoji: '😎', accent: '#00b894' },
   { videoId: 'WDaNJW_jEBo', artist: 'Busta Rhymes ft. Mariah Carey', track: 'I Know What You Want', emoji: '💋', accent: '#e84393' },
+  { videoId: 'pfxyk1glEq4', artist: 'Chris Brown', track: 'Under The Influence', emoji: '🌀', accent: '#6c5ce7' },
 ];
