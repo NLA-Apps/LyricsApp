@@ -13,7 +13,6 @@ export type LibrarySong = {
 // differs from the lyrics file — so everyone gets them aligned by default.
 // A user's own calibration (saved locally) overrides these.
 export const defaultOffsets: Record<string, number> = {
-  '2Vv-BfVoq4g': -18.8, // Ed Sheeran – Perfect
   'LjhCEhWiKXk': -15.7, // Bruno Mars – Just the Way You Are
   'fLexgOxsZu0': -3.0, // Bruno Mars – The Lazy Song
   'Xg72z08aTXY': -0.5, // Måneskin – Beggin'
@@ -37,6 +36,11 @@ export const youtubeSourcedLyrics = new Set<string>([
   'kPBzTxZQG5Q', // 3 Doors Down – Here Without You
   'WDaNJW_jEBo', // Busta Rhymes ft. Mariah Carey – I Know What You Want
   'pfxyk1glEq4', // Chris Brown – Under The Influence
+  '2Vv-BfVoq4g', // Ed Sheeran – Perfect
+  'JGwWNGJdvx8', // Ed Sheeran – Shape of You
+  'H5v3kku4y6Q', // Harry Styles – As It Was
+  '0yW7w8F2TVA', // James Arthur – Say You Won't Let Go
+  '450p7goxZqg', // John Legend – All of Me
   '8gyLR4NfMiI', // Chris Brown ft. Lil Wayne, Busta Rhymes – Look At Me Now
   'QVXE1EzMrfw', // Ja Rule ft. R. Kelly, Ashanti – Wonderful
   '34Na4j8AVgA', // The Weeknd ft. Daft Punk – Starboy
