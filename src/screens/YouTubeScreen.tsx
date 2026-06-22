@@ -350,7 +350,8 @@ export default function YouTubeScreen({ navigation, route }: any) {
   // The best Hebrew for a line: curated first, then live auto-translation.
   function lineHe(i: number): string {
     const key = lines[i]?.tag;
-    return (key && bundledTr[key]) || lineTranslations[i] || '...';
+    const tr = (key && bundledTr[key]) || lineTranslations[i] || '...';
+    return tr.replace(/¦/g, '\n');
   }
 
   const playerRef = useRef<any>(null);
