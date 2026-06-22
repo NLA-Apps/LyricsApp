@@ -14,6 +14,7 @@ import { execFile } from 'child_process';
 const PORT = 5174;
 const ROOT = path.resolve(import.meta.dirname, '..');
 const TRANSLATIONS_DIR = path.join(ROOT, 'public', 'translations');
+const LYRICS_DIR = path.join(ROOT, 'public', 'lyrics');
 
 function send(res, status, body) {
   res.writeHead(status, {
@@ -48,52 +49,108 @@ const server = http.createServer((req, res) => {
     });
     return;
   }
-  if (req.method !== 'POST' || req.url !== '/save-translation') {
-    send(res, 404, { error: 'not found' });
-    return;
-  }
-  let body = '';
-  req.on('data', (chunk) => (body += chunk));
-  req.on('end', () => {
-    let data;
-    try {
-      data = JSON.parse(body);
-    } catch {
-      send(res, 400, { error: 'invalid JSON' });
-      return;
-    }
-    const { videoId, tag, text, track } = data || {};
-    if (!isSafeVideoId(videoId) || typeof tag !== 'string' || typeof text !== 'string') {
-      send(res, 400, { error: 'missing/invalid fields' });
-      return;
-    }
-    const file = path.join(TRANSLATIONS_DIR, `${videoId}.json`);
-    let json = {};
-    try {
-      json = JSON.parse(fs.readFileSync(file, 'utf8'));
-    } catch {
-      // file may not exist yet for a song with no bundled translation
-    }
-    json[tag] = text;
-    fs.writeFileSync(file, JSON.stringify(json, null, 2) + '\n', 'utf8');
-
-    const relPath = path.relative(ROOT, file);
-    execFile('git', ['add', relPath], { cwd: ROOT }, (addErr) => {
-      if (addErr) {
-        send(res, 200, { saved: true, committed: false, error: String(addErr) });
+  if (req.method === 'POST' && req.url === '/save-translation') {
+    let body = '';
+    req.on('data', (chunk) => (body += chunk));
+    req.on('end', () => {
+      let data;
+      try {
+        data = JSON.parse(body);
+      } catch {
+        send(res, 400, { error: 'invalid JSON' });
         return;
       }
-      const message = `Fix translation line in ${track || videoId} (${tag})`;
-      execFile('git', ['commit', '-m', message], { cwd: ROOT }, (commitErr) => {
-        if (commitErr) {
-          // most likely "nothing to commit" if the text matched what was already there
-          send(res, 200, { saved: true, committed: false, error: String(commitErr) });
+      const { videoId, tag, text, track } = data || {};
+      if (!isSafeVideoId(videoId) || typeof tag !== 'string' || typeof text !== 'string') {
+        send(res, 400, { error: 'missing/invalid fields' });
+        return;
+      }
+      const file = path.join(TRANSLATIONS_DIR, `${videoId}.json`);
+      let json = {};
+      try {
+        json = JSON.parse(fs.readFileSync(file, 'utf8'));
+      } catch {
+        // file may not exist yet for a song with no bundled translation
+      }
+      json[tag] = text;
+      fs.writeFileSync(file, JSON.stringify(json, null, 2) + '\n', 'utf8');
+
+      const relPath = path.relative(ROOT, file);
+      execFile('git', ['add', relPath], { cwd: ROOT }, (addErr) => {
+        if (addErr) {
+          send(res, 200, { saved: true, committed: false, error: String(addErr) });
           return;
         }
-        send(res, 200, { saved: true, committed: true });
+        const message = `Fix translation line in ${track || videoId} (${tag})`;
+        execFile('git', ['commit', '-m', message], { cwd: ROOT }, (commitErr) => {
+          if (commitErr) {
+            // most likely "nothing to commit" if the text matched what was already there
+            send(res, 200, { saved: true, committed: false, error: String(commitErr) });
+            return;
+          }
+          send(res, 200, { saved: true, committed: true });
+        });
       });
     });
-  });
+    return;
+  }
+
+  // Move a word across the boundary between two adjacent lyric lines (e.g.
+  // a caption split the line in the wrong place). Updates both lines' text
+  // in the .lrc file in one commit.
+  if (req.method === 'POST' && req.url === '/save-lyric-lines') {
+    let body = '';
+    req.on('data', (chunk) => (body += chunk));
+    req.on('end', () => {
+      let data;
+      try {
+        data = JSON.parse(body);
+      } catch {
+        send(res, 400, { error: 'invalid JSON' });
+        return;
+      }
+      const { videoId, edits, track } = data || {};
+      if (!isSafeVideoId(videoId) || !Array.isArray(edits) || !edits.length) {
+        send(res, 400, { error: 'missing/invalid fields' });
+        return;
+      }
+      const file = path.join(LYRICS_DIR, `${videoId}.lrc`);
+      let raw;
+      try {
+        raw = fs.readFileSync(file, 'utf8');
+      } catch {
+        send(res, 400, { error: 'lyrics file not found' });
+        return;
+      }
+      const lines = raw.split('\n');
+      for (const { tag, text } of edits) {
+        if (typeof tag !== 'string' || typeof text !== 'string') continue;
+        const idx = lines.findIndex((l) => l.startsWith(`[${tag}]`));
+        if (idx >= 0) lines[idx] = `[${tag}]${text}`;
+      }
+      fs.writeFileSync(file, lines.join('\n'), 'utf8');
+
+      const relPath = path.relative(ROOT, file);
+      execFile('git', ['add', relPath], { cwd: ROOT }, (addErr) => {
+        if (addErr) {
+          send(res, 200, { saved: true, committed: false, error: String(addErr) });
+          return;
+        }
+        const tags = edits.map((e) => e.tag).join(', ');
+        const message = `Adjust line boundary in ${track || videoId} (${tags})`;
+        execFile('git', ['commit', '-m', message], { cwd: ROOT }, (commitErr) => {
+          if (commitErr) {
+            send(res, 200, { saved: true, committed: false, error: String(commitErr) });
+            return;
+          }
+          send(res, 200, { saved: true, committed: true });
+        });
+      });
+    });
+    return;
+  }
+
+  send(res, 404, { error: 'not found' });
 });
 
 server.listen(PORT, () => {

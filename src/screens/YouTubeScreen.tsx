@@ -174,6 +174,65 @@ export default function YouTubeScreen({ navigation, route }: any) {
     playerRef.current?.playVideo?.();
   }
 
+  // Dev-only: fix a caption that split a sentence at the wrong word boundary
+  // by nudging one word across the line break, then save both lines.
+  const [moveStatus, setMoveStatus] = useState<'idle' | 'saving' | 'error'>('idle');
+
+  async function saveLyricLineEdits(edits: { tag: string; text: string }[]) {
+    setMoveStatus('saving');
+    try {
+      const res = await fetch('http://localhost:5174/save-lyric-lines', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ videoId, edits, track }),
+      });
+      if (!res.ok) throw new Error('save failed');
+      setLines((prev) => {
+        const next = prev.map((l) => ({ ...l }));
+        for (const { tag, text } of edits) {
+          const i = next.findIndex((l) => l.tag === tag);
+          if (i >= 0) next[i].text = text;
+        }
+        return next;
+      });
+      setMoveStatus('idle');
+    } catch {
+      setMoveStatus('error');
+    }
+  }
+
+  // Pull the next line's first word back onto the end of the current line.
+  function moveWordFromNextToCurrent(idx: number) {
+    const cur = lines[idx];
+    const next = lines[idx + 1];
+    if (!cur || !next || !next.text) return;
+    const nextWords = next.text.split(/\s+/).filter(Boolean);
+    const moved = nextWords.shift();
+    if (!moved) return;
+    const newCurText = cur.text ? `${cur.text} ${moved}` : moved;
+    const newNextText = nextWords.join(' ');
+    saveLyricLineEdits([
+      { tag: cur.tag, text: newCurText },
+      { tag: next.tag, text: newNextText },
+    ]);
+  }
+
+  // Push the current line's last word forward onto the start of the next line.
+  function moveWordFromCurrentToNext(idx: number) {
+    const cur = lines[idx];
+    const next = lines[idx + 1];
+    if (!cur || !next || !cur.text) return;
+    const curWords = cur.text.split(/\s+/).filter(Boolean);
+    const moved = curWords.pop();
+    if (!moved) return;
+    const newCurText = curWords.join(' ');
+    const newNextText = next.text ? `${moved} ${next.text}` : moved;
+    saveLyricLineEdits([
+      { tag: cur.tag, text: newCurText },
+      { tag: next.tag, text: newNextText },
+    ]);
+  }
+
   async function saveLineTranslation(tag: string, text: string) {
     setEditStatus('saving');
     try {
@@ -861,6 +920,24 @@ export default function YouTubeScreen({ navigation, route }: any) {
                       controls below never shift between sung lines and
                       instrumental (♪) gaps. */}
                   <View style={styles.lineActionsRow}>
+                    {canEditTranslations && lines[idx + 1] && editingTag !== cur.tag && (
+                      <TouchableOpacity
+                        style={styles.lineActionBtn}
+                        onPress={() => moveWordFromNextToCurrent(idx)}
+                        activeOpacity={0.7}
+                      >
+                        <MaterialIcons name="arrow-back" size={18} color={colors.primarySoft} />
+                      </TouchableOpacity>
+                    )}
+                    {canEditTranslations && cur.text && lines[idx + 1] && editingTag !== cur.tag && (
+                      <TouchableOpacity
+                        style={styles.lineActionBtn}
+                        onPress={() => moveWordFromCurrentToNext(idx)}
+                        activeOpacity={0.7}
+                      >
+                        <MaterialIcons name="arrow-forward" size={18} color={colors.primarySoft} />
+                      </TouchableOpacity>
+                    )}
                     {canEditTranslations && cur.text && editingTag !== cur.tag && (
                       <TouchableOpacity
                         style={styles.lineActionBtn}
@@ -869,6 +946,9 @@ export default function YouTubeScreen({ navigation, route }: any) {
                       >
                         <MaterialIcons name="edit" size={20} color={colors.warning} />
                       </TouchableOpacity>
+                    )}
+                    {canEditTranslations && moveStatus === 'error' && (
+                      <Text style={styles.editStatus}>שגיאה בהזזת מילה</Text>
                     )}
                     {cur.text && displayMode === 'en' && (
                       <TouchableOpacity
