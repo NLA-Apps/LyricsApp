@@ -27,7 +27,9 @@ async function googleTranslate(text: string): Promise<string | null> {
     encodeURIComponent(text);
   const data = await fetchJson(url);
   if (Array.isArray(data) && Array.isArray(data[0])) {
-    return data[0].map((seg: any) => seg[0]).join('');
+    // Strip Hebrew nikud (vowel points) — Google Translate sometimes adds
+    // them, which looks inconsistent next to the unvocalized curated text.
+    return data[0].map((seg: any) => seg[0]).join('').replace(/[֑-ׇ]/g, '');
   }
   return null;
 }

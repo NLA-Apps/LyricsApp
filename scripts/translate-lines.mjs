@@ -9,7 +9,7 @@ async function translate(text) {
   const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
   const data = await res.json();
   if (Array.isArray(data) && Array.isArray(data[0])) {
-    return data[0].map((seg) => seg[0]).join('');
+    return data[0].map((seg) => seg[0]).join('').replace(/[֑-ׇ]/g, '');
   }
   return null;
 }
