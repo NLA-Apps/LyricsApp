@@ -63,6 +63,13 @@ export const youtubeSourcedLyrics = new Set<string>([
   'GxBSyx85Kp8', // Usher ft. Lil Jon, Ludacris – Yeah!
 ]);
 
+// videoIds that have been manually checked end-to-end and confirmed good
+// (lyrics, translation, and timing all verified) — shown with a small green
+// dot in the library list.
+export const readySongs = new Set<string>([
+  'RBumgq5yVrA', // Passenger – Let Her Go
+]);
+
 export const library: LibrarySong[] = [
   { videoId: 'RBumgq5yVrA', artist: 'Passenger', track: 'Let Her Go', emoji: '🎸', accent: '#6c5ce7' },
   { videoId: 'GBSu_ltDu1w', artist: 'The Beatles', track: 'Blackbird', emoji: '🐦', accent: '#0984e3' },

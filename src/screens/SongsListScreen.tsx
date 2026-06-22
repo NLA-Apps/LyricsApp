@@ -3,7 +3,7 @@ import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { colors, fonts, radius, spacing } from '../theme';
-import { library, LibrarySong, youtubeSourcedLyrics } from '../data/library';
+import { library, LibrarySong, youtubeSourcedLyrics, readySongs } from '../data/library';
 import { getProgress, getLevel, xpIntoLevel } from '../progress';
 import { getVocab } from '../vocab';
 
@@ -156,6 +156,7 @@ function SongCard({ song, number, onPress }: { song: LibrarySong; number: number
         <Text style={styles.songTitle}>{song.track}</Text>
         <Text style={styles.songArtist}>{song.artist}</Text>
       </View>
+      {readySongs.has(song.videoId) && <View style={styles.readyDot} />}
       <View style={styles.playCol}>
         {youtubeSourcedLyrics.has(song.videoId) && (
           <MaterialIcons name="translate" size={14} color={colors.danger} style={styles.sourceBadge} />
@@ -233,6 +234,7 @@ const styles = StyleSheet.create({
   songArtist: { color: colors.textMuted, fontSize: 13, marginTop: 2 },
   playCol: { alignItems: 'center', paddingHorizontal: spacing.md },
   sourceBadge: { marginBottom: 2 },
+  readyDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.success },
   play: { color: colors.primarySoft, fontSize: 20 },
 
   pager: {
