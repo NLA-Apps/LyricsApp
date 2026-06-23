@@ -68,6 +68,13 @@ export const youtubeSourcedLyrics = new Set<string>([
 export const readySongs = new Set<string>([
   'RBumgq5yVrA', // Passenger – Let Her Go
   'kPBzTxZQG5Q', // 3 Doors Down – Here Without You
+  'YQHsXMglC9A', // Adele – Hello
+  'hLQl3WQQoQ0', // Adele – Someone Like You
+  'GBSu_ltDu1w', // The Beatles – Blackbird
+  'WpYeekQkAdc', // Black Eyed Peas – Where Is The Love?
+  'LjhCEhWiKXk', // Bruno Mars – Just the Way You Are
+  'nfs8NYg7yQM', // Charlie Puth – Attention
+  'BxuY9FET9Y4', // Charlie Puth – One Call Away
 ]);
 
 export const library: LibrarySong[] = [
