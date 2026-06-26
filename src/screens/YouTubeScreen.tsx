@@ -305,6 +305,25 @@ export default function YouTubeScreen({ navigation, route }: any) {
     await saveLyricLineEdits([{ tag: cur.tag, text: cur.text }], wordTimingUpdate);
   }
 
+  // For a line with no word-timing at all (e.g. one added manually), give
+  // it real timing in one step: press this the moment the line finishes
+  // being sung, and the words get spread evenly across however long that
+  // actually took, instead of falling back to the generic estimate.
+  async function calibrateLineSpeed(idx: number) {
+    const cur = lines[idx];
+    if (!cur || !cur.text) return;
+    const words = cur.text.split(/\s+/).filter(Boolean);
+    if (!words.length) return;
+    const elapsed = Math.max(0.3, getTime() - syncOffset - cur.time);
+    const perWord = elapsed / words.length;
+    const generated = words.map((word, i) => ({
+      word,
+      start: +(cur.time + i * perWord).toFixed(3),
+      end: +(cur.time + (i + 1) * perWord).toFixed(3),
+    }));
+    await saveLyricLineEdits([{ tag: cur.tag, text: cur.text }], { [cur.tag]: generated });
+  }
+
   async function saveLineTranslation(tag: string, text: string) {
     setEditStatus('saving');
     try {
@@ -1002,6 +1021,15 @@ export default function YouTubeScreen({ navigation, route }: any) {
                         activeOpacity={0.7}
                       >
                         <MaterialIcons name="fast-forward" size={18} color={colors.primarySoft} />
+                      </TouchableOpacity>
+                    )}
+                    {canEditTranslations && !!cur.text && !wordTiming[cur.tag]?.length && editingTag !== cur.tag && (
+                      <TouchableOpacity
+                        style={styles.lineActionBtn}
+                        onPress={() => calibrateLineSpeed(idx)}
+                        activeOpacity={0.7}
+                      >
+                        <MaterialIcons name="timer" size={18} color={colors.primarySoft} />
                       </TouchableOpacity>
                     )}
                     {canEditTranslations && !!cur.text && editingTag !== cur.tag && (
