@@ -2513,5 +2513,62 @@
       "start": 309.37,
       "end": 309.72
     }
+  ],
+  "05:11.32": [
+    {
+      "word": "Cuttin'",
+      "start": 311.32,
+      "end": 311.67
+    },
+    {
+      "word": "up",
+      "start": 311.67,
+      "end": 312.02
+    },
+    {
+      "word": "in",
+      "start": 312.02,
+      "end": 312.37
+    },
+    {
+      "word": "the",
+      "start": 312.37,
+      "end": 312.72
+    },
+    {
+      "word": "streets",
+      "start": 312.72,
+      "end": 313.07
+    },
+    {
+      "word": "like",
+      "start": 313.07,
+      "end": 313.42
+    },
+    {
+      "word": "we",
+      "start": 313.42,
+      "end": 313.77
+    },
+    {
+      "word": "would",
+      "start": 313.77,
+      "end": 314.12
+    },
+    {
+      "word": "never",
+      "start": 314.12,
+      "end": 314.47
+    },
+    {
+      "word": "get",
+      "start": 314.47,
+      "end": 314.82
+    },
+    {
+      "word": "old",
+      "start": 314.82,
+      "end": 315.17
+    }
   ]
 }
