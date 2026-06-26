@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   ActivityIndicator,
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
@@ -622,6 +623,7 @@ export default function YouTubeScreen({ navigation, route }: any) {
   // A scrollable overview of every line at once, for adjusting timing
   // without needing playback to actually reach each one.
   const [allLinesOpen, setAllLinesOpen] = useState(false);
+  const [expandedLineTag, setExpandedLineTag] = useState<string | null>(null);
   // High-quality curated translations bundled with the app (time -> Hebrew).
   const [bundledTr, setBundledTr] = useState<Record<string, string>>({});
   // Real per-word timestamps from offline forced alignment, keyed by LRC
@@ -1262,23 +1264,85 @@ export default function YouTubeScreen({ navigation, route }: any) {
             <Text style={styles.calBtnText}>{allLinesOpen ? '✕ סגור תצוגת כל השורות' : '📋 הצג את כל השורות'}</Text>
           </TouchableOpacity>
         )}
-        {canEditTranslations && allLinesOpen && (
-          <View style={styles.allLinesBox}>
-            {lines.map((l, i) => (
-              <View key={l.tag} style={styles.allLinesRow}>
-                <TouchableOpacity onPress={() => shiftLineTime(i, -LINE_SHIFT_STEP)} hitSlop={6}>
-                  <MaterialIcons name="arrow-back" size={16} color={colors.primarySoft} />
-                </TouchableOpacity>
-                <Text style={styles.allLinesText} numberOfLines={1}>
-                  {l.tag} — {l.text || '♪'}
-                </Text>
-                <TouchableOpacity onPress={() => shiftLineTime(i, LINE_SHIFT_STEP)} hitSlop={6}>
-                  <MaterialIcons name="arrow-forward" size={16} color={colors.primarySoft} />
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
-        )}
+        <Modal
+          visible={allLinesOpen}
+          transparent={false}
+          animationType="slide"
+          onRequestClose={() => setAllLinesOpen(false)}
+        >
+          <SafeAreaView style={styles.allLinesModal}>
+            <View style={styles.allLinesHeader}>
+              <Text style={styles.allLinesTitle}>כל השורות</Text>
+              <TouchableOpacity onPress={() => setAllLinesOpen(false)} hitSlop={8}>
+                <MaterialIcons name="close" size={24} color={colors.text} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView contentContainerStyle={{ padding: spacing.md }}>
+              {lines.map((l, i) => {
+                const words = l.text ? l.text.split(/\s+/).filter(Boolean) : [];
+                const wt = wordTiming[l.tag];
+                const isExpanded = expandedLineTag === l.tag;
+                return (
+                  <View key={l.tag} style={styles.allLinesRow}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+                      <TouchableOpacity onPress={() => shiftLineTime(i, -LINE_SHIFT_STEP)} hitSlop={6}>
+                        <MaterialIcons name="arrow-back" size={18} color={colors.primarySoft} />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{ flex: 1 }}
+                        onPress={() => setExpandedLineTag(isExpanded ? null : l.tag)}
+                      >
+                        <Text style={styles.allLinesText} numberOfLines={2}>
+                          {l.tag} — {l.text || '♪'}
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => shiftLineTime(i, LINE_SHIFT_STEP)} hitSlop={6}>
+                        <MaterialIcons name="arrow-forward" size={18} color={colors.primarySoft} />
+                      </TouchableOpacity>
+                    </View>
+                    {isExpanded && !!words.length && (
+                      <View style={styles.allLinesWordsRow}>
+                        {words.map((w, wi) => (
+                          <View key={wi} style={styles.allLinesWordCol}>
+                            <Text style={styles.allLinesWordText}>{w}</Text>
+                            <TextInput
+                              key={`${l.tag}-${wi}-${wt?.[wi]?.start ?? ''}`}
+                              style={styles.wordTimeInput}
+                              defaultValue={wt?.[wi] ? formatMmSs(wt[wi].start - syncOffset) : ''}
+                              placeholder={formatMmSs(l.time + wi * DEFAULT_WORD_DURATION - syncOffset)}
+                              placeholderTextColor={colors.textFaint}
+                              keyboardType="numbers-and-punctuation"
+                              onSubmitEditing={(e) => setWordStartTime(l.tag, l.text, wi, e.nativeEvent.text)}
+                              onBlur={(e: any) =>
+                                setWordStartTime(l.tag, l.text, wi, e.nativeEvent.text ?? e.target?.value ?? '')
+                              }
+                            />
+                            <View style={styles.wordTimeStepRow}>
+                              <TouchableOpacity
+                                style={styles.wordTimeStepBtn}
+                                onPress={() => bumpWordTime(l.tag, l.text, wi, -WORD_TIME_STEP)}
+                                hitSlop={4}
+                              >
+                                <Text style={styles.wordTimeStepText}>−</Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={styles.wordTimeStepBtn}
+                                onPress={() => bumpWordTime(l.tag, l.text, wi, WORD_TIME_STEP)}
+                                hitSlop={4}
+                              >
+                                <Text style={styles.wordTimeStepText}>+</Text>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                );
+              })}
+            </ScrollView>
+          </SafeAreaView>
+        </Modal>
         {/* Focused karaoke: only the current line (+ a peek at prev/next) */}
         {lines.length > 0 &&
           (() => {
@@ -1956,23 +2020,32 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     marginTop: spacing.sm,
   },
-  allLinesBox: {
-    width: '100%',
-    maxHeight: 260,
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    padding: spacing.sm,
-    marginTop: spacing.sm,
-  },
-  allLinesRow: {
+  allLinesModal: { flex: 1, backgroundColor: colors.background },
+  allLinesHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
-    paddingVertical: 4,
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: colors.surfaceLight,
   },
-  allLinesText: { flex: 1, color: colors.textMuted, fontSize: 12, textAlign: 'left' },
+  allLinesTitle: { color: colors.text, fontSize: 18, fontWeight: '800' },
+  allLinesRow: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.surfaceLight,
+  },
+  allLinesText: { flex: 1, color: colors.textMuted, fontSize: 13, textAlign: 'left' },
+  allLinesWordsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginTop: spacing.sm,
+    paddingStart: 24,
+  },
+  allLinesWordCol: { alignItems: 'center' },
+  allLinesWordText: { color: colors.text, fontSize: 12, marginBottom: 2 },
 
   // Focused karaoke view
   karaoke: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, alignItems: 'center' },
