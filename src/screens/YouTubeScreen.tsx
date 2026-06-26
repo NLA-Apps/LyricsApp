@@ -201,6 +201,7 @@ export default function YouTubeScreen({ navigation, route }: any) {
   // the DOM), so this tracks the hovered button's own label + cursor
   // position and renders one small floating bubble that follows it.
   const [tooltip, setTooltip] = useState<{ label: string; left: number; top: number } | null>(null);
+  const tooltipTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   function showTip(e: any, label: string) {
     if (Platform.OS !== 'web') return;
     const target = e?.currentTarget;
@@ -216,8 +217,14 @@ export default function YouTubeScreen({ navigation, route }: any) {
       left: rect.left + rect.width / 2 - width / 2,
       top: rect.top - 8 - height,
     });
+    if (tooltipTimer.current) clearTimeout(tooltipTimer.current);
+    tooltipTimer.current = setTimeout(hideTip, 3000);
   }
   function hideTip() {
+    if (tooltipTimer.current) {
+      clearTimeout(tooltipTimer.current);
+      tooltipTimer.current = null;
+    }
     setTooltip(null);
   }
 
