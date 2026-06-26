@@ -1536,5 +1536,52 @@
       "start": 152.75,
       "end": 153.1
     }
+  ],
+  "02:34.35": [
+    {
+      "word": "Step",
+      "start": 154.35,
+      "end": 154.7
+    },
+    {
+      "word": "on",
+      "start": 154.7,
+      "end": 155.05
+    },
+    {
+      "word": "the",
+      "start": 155.05,
+      "end": 155.4
+    },
+    {
+      "word": "grind",
+      "start": 155.4,
+      "end": 155.75
+    },
+    {
+      "word": "tryin'",
+      "start": 155.75,
+      "end": 156.1
+    },
+    {
+      "word": "to",
+      "start": 156.1,
+      "end": 156.45
+    },
+    {
+      "word": "elevate",
+      "start": 156.45,
+      "end": 156.8
+    },
+    {
+      "word": "it",
+      "start": 156.8,
+      "end": 157.15
+    },
+    {
+      "word": "now",
+      "start": 157.15,
+      "end": 157.5
+    }
   ]
 }
