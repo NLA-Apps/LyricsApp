@@ -285,6 +285,58 @@ export default function YouTubeScreen({ navigation, route }: any) {
     }
   }
 
+  // Move when the whole line itself appears (not just the word-by-word
+  // highlight inside it) a few seconds earlier or later - for a line
+  // that's simply timed wrong from the start, not just sung at an
+  // unexpected pace. Renames the line's tag, carrying its translation and
+  // any word-timing (also shifted by the same amount) along with it.
+  const LINE_SHIFT_STEP = 0.5;
+  async function shiftLineTime(idx: number, deltaSeconds: number) {
+    const cur = lines[idx];
+    if (!cur) return;
+    const newTime = Math.max(0, cur.time + deltaSeconds);
+    const mm = String(Math.floor(newTime / 60)).padStart(2, '0');
+    const ss = (newTime % 60).toFixed(2).padStart(5, '0');
+    const newTag = `${mm}:${ss}`;
+    if (newTag === cur.tag) return;
+    const oldWordTiming = wordTiming[cur.tag];
+    const shiftedWordTiming = oldWordTiming
+      ? oldWordTiming.map((w) => ({ ...w, start: Math.max(0, w.start + deltaSeconds), end: Math.max(0, w.end + deltaSeconds) }))
+      : undefined;
+    setMoveStatus('saving');
+    try {
+      const res = await fetch('http://localhost:5174/shift-lyric-line', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ videoId, oldTag: cur.tag, newTag, text: cur.text, wordTimingUpdate: shiftedWordTiming, track }),
+      });
+      if (!res.ok) throw new Error('shift failed');
+      setLines((prev) => {
+        const next = prev.filter((l) => l.tag !== cur.tag);
+        next.push({ time: newTime, text: cur.text, tag: newTag });
+        next.sort((a, b) => a.time - b.time);
+        return next;
+      });
+      setBundledTr((prev) => {
+        const next = { ...prev };
+        if (cur.tag in next) {
+          next[newTag] = next[cur.tag];
+          delete next[cur.tag];
+        }
+        return next;
+      });
+      setWordTiming((prev) => {
+        const next = { ...prev };
+        delete next[cur.tag];
+        if (shiftedWordTiming) next[newTag] = shiftedWordTiming;
+        return next;
+      });
+      setMoveStatus('idle');
+    } catch {
+      setMoveStatus('error');
+    }
+  }
+
   // Nudge the current line's word-highlight timing earlier or later, for
   // fine-tuning after the rough estimate (or a one-shot calibration) isn't
   // quite right. Shifts every word's start/end by a fixed step in the given
@@ -1026,6 +1078,24 @@ export default function YouTubeScreen({ navigation, route }: any) {
                       controls below never shift between sung lines and
                       instrumental (♪) gaps. */}
                   <View style={styles.lineActionsRow}>
+                    {canEditTranslations && !!cur.text && editingTag !== cur.tag && (
+                      <TouchableOpacity
+                        style={styles.lineActionBtn}
+                        onPress={() => shiftLineTime(idx, -LINE_SHIFT_STEP)}
+                        activeOpacity={0.7}
+                      >
+                        <MaterialIcons name="arrow-back" size={18} color={colors.primarySoft} />
+                      </TouchableOpacity>
+                    )}
+                    {canEditTranslations && !!cur.text && editingTag !== cur.tag && (
+                      <TouchableOpacity
+                        style={styles.lineActionBtn}
+                        onPress={() => shiftLineTime(idx, LINE_SHIFT_STEP)}
+                        activeOpacity={0.7}
+                      >
+                        <MaterialIcons name="arrow-forward" size={18} color={colors.primarySoft} />
+                      </TouchableOpacity>
+                    )}
                     {canEditTranslations && !!cur.text && !!wordTiming[cur.tag]?.length && editingTag !== cur.tag && (
                       <TouchableOpacity
                         style={styles.lineActionBtn}
