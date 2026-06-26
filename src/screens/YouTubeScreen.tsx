@@ -285,70 +285,24 @@ export default function YouTubeScreen({ navigation, route }: any) {
     }
   }
 
-  // After moving a word between two English lines, the old Hebrew
-  // translations no longer match — re-translate both lines from scratch
-  // rather than trying to algorithmically shift a Hebrew word (translations
-  // aren't word-aligned with the English, so that wouldn't be reliable).
-  // Takes the new English texts directly rather than reading `lines`, since
-  // that state may not have re-rendered yet by the time this runs.
-  async function retranslateLines(edits: { tag: string; text: string }[]) {
-    for (const { tag, text } of edits) {
-      if (!text) continue;
-      const tr = await translateToHebrew(text);
-      await saveLineTranslation(tag, tr);
-    }
-  }
-
-  // Pull the next line's first word back onto the end of the current line.
-  async function moveWordFromNextToCurrent(idx: number) {
+  // Nudge the current line's word-highlight timing earlier, for when the
+  // karaoke marker feels like it's lagging behind the actual singing on
+  // this specific line. Shifts every word's start/end back by a fixed
+  // step (clamped so it can't go negative or past the next word).
+  const SPEED_UP_STEP = 0.15;
+  async function speedUpCurrentLine(idx: number) {
     const cur = lines[idx];
-    const next = lines[idx + 1];
-    if (!cur || !next || !next.text) return;
-    const nextWords = next.text.split(/\s+/).filter(Boolean);
-    const moved = nextWords.shift();
-    if (!moved) return;
-    const newCurText = cur.text ? `${cur.text} ${moved}` : moved;
-    const newNextText = nextWords.join(' ');
-    const edits = [
-      { tag: cur.tag, text: newCurText },
-      { tag: next.tag, text: newNextText },
-    ];
-    // Move the actual aligned word entry along with it — its real audio
-    // timestamp doesn't change, only which line's bucket it's filed under.
-    const curWordTiming = wordTiming[cur.tag] ? [...wordTiming[cur.tag]] : null;
-    const nextWordTiming = wordTiming[next.tag] ? [...wordTiming[next.tag]] : null;
-    let wordTimingUpdate: Record<string, { word: string; start: number; end: number }[]> | undefined;
-    if (curWordTiming && nextWordTiming && nextWordTiming.length) {
-      const movedEntry = nextWordTiming.shift()!;
-      wordTimingUpdate = { [cur.tag]: [...curWordTiming, movedEntry], [next.tag]: nextWordTiming };
-    }
-    await saveLyricLineEdits(edits, wordTimingUpdate);
-    await retranslateLines(edits);
-  }
-
-  // Push the current line's last word forward onto the start of the next line.
-  async function moveWordFromCurrentToNext(idx: number) {
-    const cur = lines[idx];
-    const next = lines[idx + 1];
-    if (!cur || !next || !cur.text) return;
-    const curWords = cur.text.split(/\s+/).filter(Boolean);
-    const moved = curWords.pop();
-    if (!moved) return;
-    const newCurText = curWords.join(' ');
-    const newNextText = next.text ? `${moved} ${next.text}` : moved;
-    const edits = [
-      { tag: cur.tag, text: newCurText },
-      { tag: next.tag, text: newNextText },
-    ];
-    const curWordTiming = wordTiming[cur.tag] ? [...wordTiming[cur.tag]] : null;
-    const nextWordTiming = wordTiming[next.tag] ? [...wordTiming[next.tag]] : null;
-    let wordTimingUpdate: Record<string, { word: string; start: number; end: number }[]> | undefined;
-    if (curWordTiming && curWordTiming.length && nextWordTiming) {
-      const movedEntry = curWordTiming.pop()!;
-      wordTimingUpdate = { [cur.tag]: curWordTiming, [next.tag]: [movedEntry, ...nextWordTiming] };
-    }
-    await saveLyricLineEdits(edits, wordTimingUpdate);
-    await retranslateLines(edits);
+    if (!cur) return;
+    const curWordTiming = wordTiming[cur.tag];
+    if (!curWordTiming || !curWordTiming.length) return;
+    const shifted = curWordTiming.map((w, i) => {
+      const prevEnd = i > 0 ? curWordTiming[i - 1].end - SPEED_UP_STEP : 0;
+      const start = Math.max(0, prevEnd, w.start - SPEED_UP_STEP);
+      const duration = w.end - w.start;
+      return { ...w, start, end: start + duration };
+    });
+    const wordTimingUpdate = { [cur.tag]: shifted };
+    await saveLyricLineEdits([{ tag: cur.tag, text: cur.text }], wordTimingUpdate);
   }
 
   async function saveLineTranslation(tag: string, text: string) {
@@ -1041,22 +995,13 @@ export default function YouTubeScreen({ navigation, route }: any) {
                       controls below never shift between sung lines and
                       instrumental (♪) gaps. */}
                   <View style={styles.lineActionsRow}>
-                    {canEditTranslations && lines[idx + 1] && editingTag !== cur.tag && (
+                    {canEditTranslations && !!cur.text && !!wordTiming[cur.tag]?.length && editingTag !== cur.tag && (
                       <TouchableOpacity
                         style={styles.lineActionBtn}
-                        onPress={() => moveWordFromNextToCurrent(idx)}
+                        onPress={() => speedUpCurrentLine(idx)}
                         activeOpacity={0.7}
                       >
-                        <MaterialIcons name="arrow-back" size={18} color={colors.primarySoft} />
-                      </TouchableOpacity>
-                    )}
-                    {canEditTranslations && !!cur.text && lines[idx + 1] && editingTag !== cur.tag && (
-                      <TouchableOpacity
-                        style={styles.lineActionBtn}
-                        onPress={() => moveWordFromCurrentToNext(idx)}
-                        activeOpacity={0.7}
-                      >
-                        <MaterialIcons name="arrow-forward" size={18} color={colors.primarySoft} />
+                        <MaterialIcons name="fast-forward" size={18} color={colors.primarySoft} />
                       </TouchableOpacity>
                     )}
                     {canEditTranslations && !!cur.text && editingTag !== cur.tag && (
