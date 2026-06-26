@@ -170,6 +170,71 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Insert a brand-new lyric line at a given timestamp (e.g. the captions
+  // skipped a sung phrase entirely). Inserts into the .lrc in chronological
+  // order by tag.
+  if (req.method === 'POST' && req.url === '/insert-lyric-line') {
+    let body = '';
+    req.on('data', (chunk) => (body += chunk));
+    req.on('end', () => {
+      let data;
+      try {
+        data = JSON.parse(body);
+      } catch {
+        send(res, 400, { error: 'invalid JSON' });
+        return;
+      }
+      const { videoId, tag, text, track } = data || {};
+      if (!isSafeVideoId(videoId) || typeof tag !== 'string' || typeof text !== 'string' || !text.trim()) {
+        send(res, 400, { error: 'missing/invalid fields' });
+        return;
+      }
+      const file = path.join(LYRICS_DIR, `${videoId}.lrc`);
+      let raw;
+      try {
+        raw = fs.readFileSync(file, 'utf8');
+      } catch {
+        send(res, 400, { error: 'lyrics file not found' });
+        return;
+      }
+      const lines = raw.split('\n');
+      const newLine = `[${tag}]${text}`;
+      const tagToMs = (t) => {
+        const m = t.match(/^(\d+):(\d+(?:\.\d+)?)$/);
+        return m ? (parseInt(m[1], 10) * 60 + parseFloat(m[2])) * 1000 : 0;
+      };
+      const newMs = tagToMs(tag);
+      let insertAt = lines.length;
+      for (let i = 0; i < lines.length; i++) {
+        const m = lines[i].match(/^\[(\d+:\d+(?:\.\d+)?)\]/);
+        if (!m) continue;
+        if (tagToMs(m[1]) > newMs) {
+          insertAt = i;
+          break;
+        }
+      }
+      lines.splice(insertAt, 0, newLine);
+      fs.writeFileSync(file, lines.join('\n'), 'utf8');
+
+      const relPath = path.relative(ROOT, file);
+      execFile('git', ['add', relPath], { cwd: ROOT }, (addErr) => {
+        if (addErr) {
+          send(res, 200, { saved: true, committed: false, error: String(addErr) });
+          return;
+        }
+        const message = `Add missing line in ${track || videoId} (${tag})`;
+        execFile('git', ['commit', '-m', message], { cwd: ROOT }, (commitErr) => {
+          if (commitErr) {
+            send(res, 200, { saved: true, committed: false, error: String(commitErr) });
+            return;
+          }
+          send(res, 200, { saved: true, committed: true });
+        });
+      });
+    });
+    return;
+  }
+
   send(res, 404, { error: 'not found' });
 });
 

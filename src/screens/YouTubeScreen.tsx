@@ -178,6 +178,54 @@ export default function YouTubeScreen({ navigation, route }: any) {
   // by nudging one word across the line break, then save both lines.
   const [moveStatus, setMoveStatus] = useState<'idle' | 'saving' | 'error'>('idle');
 
+  // Dev-only: insert a brand-new line at the current playback position, for
+  // a sung phrase the captions missed entirely (no line at all to fix).
+  const [addingLine, setAddingLine] = useState(false);
+  const [addLineText, setAddLineText] = useState('');
+  const [addLineStatus, setAddLineStatus] = useState<'idle' | 'saving' | 'error'>('idle');
+
+  function startAddingLine() {
+    playerRef.current?.pauseVideo?.();
+    setAddLineText('');
+    setAddLineStatus('idle');
+    setAddingLine(true);
+  }
+
+  function stopAddingLine() {
+    setAddingLine(false);
+    playerRef.current?.playVideo?.();
+  }
+
+  async function saveNewLine() {
+    const text = addLineText.trim();
+    if (!text) return;
+    const t = Math.max(0, getTime() - syncOffset);
+    const mm = String(Math.floor(t / 60)).padStart(2, '0');
+    const ss = (t % 60).toFixed(2).padStart(5, '0');
+    const tag = `${mm}:${ss}`;
+    setAddLineStatus('saving');
+    try {
+      const res = await fetch('http://localhost:5174/insert-lyric-line', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ videoId, tag, text, track }),
+      });
+      if (!res.ok) throw new Error('save failed');
+      const time = parseInt(mm, 10) * 60 + parseFloat(ss);
+      setLines((prev) => {
+        const next = [...prev, { time, text, tag }];
+        next.sort((a, b) => a.time - b.time);
+        return next;
+      });
+      const tr = await translateToHebrew(text);
+      await saveLineTranslation(tag, tr);
+      setAddLineStatus('idle');
+      stopAddingLine();
+    } catch {
+      setAddLineStatus('error');
+    }
+  }
+
   async function saveLyricLineEdits(
     edits: { tag: string; text: string }[],
     wordTimingUpdate?: Record<string, { word: string; start: number; end: number }[]>
@@ -1120,6 +1168,37 @@ export default function YouTubeScreen({ navigation, route }: any) {
                     )}
                   </View>
                 )}
+                {/* Dev-only: add a sung line the captions missed entirely,
+                    at whatever moment the video is paused on. */}
+                {canEditTranslations && !addingLine && (
+                  <TouchableOpacity style={[styles.calBtn, styles.addLineBtn]} onPress={startAddingLine} activeOpacity={0.85}>
+                    <Text style={styles.calBtnText}>+ הוסף שורה חסרה כאן</Text>
+                  </TouchableOpacity>
+                )}
+                {canEditTranslations && addingLine && (
+                  <View style={styles.addLineRow}>
+                    <TextInput
+                      style={styles.addLineInput}
+                      value={addLineText}
+                      onChangeText={setAddLineText}
+                      placeholder="המשפט באנגלית..."
+                      placeholderTextColor={colors.textFaint}
+                      autoFocus
+                    />
+                    <View style={styles.editBtnRow}>
+                      <TouchableOpacity style={styles.editBtn} onPress={saveNewLine}>
+                        <MaterialIcons name="check" size={20} color={colors.success} />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.editBtn} onPress={stopAddingLine}>
+                        <MaterialIcons name="close" size={20} color={colors.textFaint} />
+                      </TouchableOpacity>
+                    </View>
+                    {addLineStatus === 'saving' && <Text style={styles.editStatus}>שומר…</Text>}
+                    {addLineStatus === 'error' && (
+                      <Text style={[styles.editStatus, { color: colors.danger }]}>שגיאה — ה-edit server רץ?</Text>
+                    )}
+                  </View>
+                )}
               </>
             )}
           </>
@@ -1318,6 +1397,26 @@ const styles = StyleSheet.create({
   editBtnRow: { flexDirection: 'row', gap: 4 },
   editBtn: { padding: 4 },
   editStatus: { color: colors.textFaint, fontSize: 11, width: '100%', textAlign: 'right' },
+
+  // Dev-only: insert a sung line the captions missed entirely.
+  addLineBtn: { marginTop: spacing.md, alignSelf: 'center' },
+  addLineRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+    width: '100%',
+  },
+  addLineInput: {
+    flex: 1,
+    color: colors.text,
+    fontSize: 15,
+    backgroundColor: colors.surfaceLight,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 6,
+    textAlign: 'left',
+  },
 
   wordWrap: { position: 'relative', alignItems: 'center', marginHorizontal: 4 },
   wordWrapActive: { zIndex: 20 },
