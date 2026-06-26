@@ -412,63 +412,6 @@
       "end": 43.453509
     }
   ],
-  "01:04.37": [
-    {
-      "word": "Ya",
-      "start": 64.37,
-      "end": 64.72
-    },
-    {
-      "word": "patience",
-      "start": 64.72,
-      "end": 65.07
-    },
-    {
-      "word": "gettin'",
-      "start": 65.07,
-      "end": 65.42
-    },
-    {
-      "word": "short,",
-      "start": 65.42,
-      "end": 65.77
-    },
-    {
-      "word": "how",
-      "start": 65.77,
-      "end": 66.12
-    },
-    {
-      "word": "much",
-      "start": 66.12,
-      "end": 66.47
-    },
-    {
-      "word": "longer",
-      "start": 66.47,
-      "end": 66.82
-    },
-    {
-      "word": "can",
-      "start": 66.82,
-      "end": 67.17
-    },
-    {
-      "word": "you",
-      "start": 67.17,
-      "end": 67.52
-    },
-    {
-      "word": "tolerate",
-      "start": 67.52,
-      "end": 67.87
-    },
-    {
-      "word": "it?",
-      "start": 67.87,
-      "end": 68.22
-    }
-  ],
   "01:07.37": [
     {
       "word": "Listen",
@@ -6139,6 +6082,63 @@
       "word": "frustrated",
       "start": 61.97,
       "end": 62.32
+    }
+  ],
+  "01:04.12": [
+    {
+      "word": "Ya",
+      "start": 64.12,
+      "end": 64.47
+    },
+    {
+      "word": "patience",
+      "start": 64.47,
+      "end": 64.82
+    },
+    {
+      "word": "gettin'",
+      "start": 64.82,
+      "end": 65.17
+    },
+    {
+      "word": "short,",
+      "start": 65.17,
+      "end": 65.52
+    },
+    {
+      "word": "how",
+      "start": 65.52,
+      "end": 65.87
+    },
+    {
+      "word": "much",
+      "start": 65.87,
+      "end": 66.22
+    },
+    {
+      "word": "longer",
+      "start": 66.22,
+      "end": 66.57
+    },
+    {
+      "word": "can",
+      "start": 66.57,
+      "end": 66.92
+    },
+    {
+      "word": "you",
+      "start": 66.92,
+      "end": 67.27
+    },
+    {
+      "word": "tolerate",
+      "start": 67.27,
+      "end": 67.62
+    },
+    {
+      "word": "it?",
+      "start": 67.62,
+      "end": 67.97
     }
   ]
 }
