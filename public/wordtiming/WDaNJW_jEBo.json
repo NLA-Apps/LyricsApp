@@ -1232,5 +1232,27 @@
       "start": 116.4,
       "end": 116.75
     }
+  ],
+  "01:58.35": [
+    {
+      "word": "Called",
+      "start": 118.35,
+      "end": 118.7
+    },
+    {
+      "word": "each",
+      "start": 118.7,
+      "end": 119.05
+    },
+    {
+      "word": "other",
+      "start": 119.05,
+      "end": 119.4
+    },
+    {
+      "word": "nicknames",
+      "start": 119.4,
+      "end": 119.75
+    }
   ]
 }
