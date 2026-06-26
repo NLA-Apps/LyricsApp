@@ -6104,41 +6104,41 @@
       "end": 59.87
     }
   ],
-  "01:00.87": [
+  "01:00.62": [
     {
       "word": "I",
-      "start": 60.87,
-      "end": 61.22
+      "start": 60.62,
+      "end": 60.97
     },
     {
       "word": "know",
-      "start": 61.22,
-      "end": 61.57
+      "start": 60.97,
+      "end": 61.32
     },
     {
       "word": "you",
-      "start": 61.57,
-      "end": 61.92
+      "start": 61.32,
+      "end": 61.67
     },
     {
       "word": "aggravated,",
-      "start": 61.92,
-      "end": 62.27
+      "start": 61.67,
+      "end": 62.02
     },
     {
       "word": "walk",
-      "start": 62.27,
-      "end": 62.62
+      "start": 62.02,
+      "end": 62.37
     },
     {
       "word": "around",
-      "start": 62.62,
-      "end": 62.97
+      "start": 62.37,
+      "end": 62.72
     },
     {
       "word": "frustrated",
-      "start": 62.97,
-      "end": 63.32
+      "start": 62.72,
+      "end": 63.07
     }
   ]
 }
