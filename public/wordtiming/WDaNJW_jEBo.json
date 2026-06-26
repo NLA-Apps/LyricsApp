@@ -412,48 +412,6 @@
       "end": 43.453509
     }
   ],
-  "00:55.37": [
-    {
-      "word": "I'm",
-      "start": 55.37,
-      "end": 55.72
-    },
-    {
-      "word": "always",
-      "start": 55.72,
-      "end": 56.07
-    },
-    {
-      "word": "on",
-      "start": 56.07,
-      "end": 56.42
-    },
-    {
-      "word": "the",
-      "start": 56.42,
-      "end": 56.77
-    },
-    {
-      "word": "road,",
-      "start": 56.77,
-      "end": 57.12
-    },
-    {
-      "word": "hardly",
-      "start": 57.12,
-      "end": 57.47
-    },
-    {
-      "word": "ever",
-      "start": 57.47,
-      "end": 57.82
-    },
-    {
-      "word": "home",
-      "start": 57.82,
-      "end": 58.17
-    }
-  ],
   "00:58.37": [
     {
       "word": "Always",
@@ -6139,6 +6097,48 @@
       "word": "Bear",
       "start": 53.963229999999996,
       "end": 54.31322999999999
+    }
+  ],
+  "00:55.12": [
+    {
+      "word": "I'm",
+      "start": 55.12,
+      "end": 55.47
+    },
+    {
+      "word": "always",
+      "start": 55.47,
+      "end": 55.82
+    },
+    {
+      "word": "on",
+      "start": 55.82,
+      "end": 56.17
+    },
+    {
+      "word": "the",
+      "start": 56.17,
+      "end": 56.52
+    },
+    {
+      "word": "road,",
+      "start": 56.52,
+      "end": 56.87
+    },
+    {
+      "word": "hardly",
+      "start": 56.87,
+      "end": 57.22
+    },
+    {
+      "word": "ever",
+      "start": 57.22,
+      "end": 57.57
+    },
+    {
+      "word": "home",
+      "start": 57.57,
+      "end": 57.92
     }
   ]
 }
