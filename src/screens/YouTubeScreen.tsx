@@ -728,21 +728,25 @@ export default function YouTubeScreen({ navigation, route }: any) {
         }));
   }
 
+  // Re-fit every word AFTER wordIdx, spaced evenly starting right where it
+  // ends — so retiming one word (the first, or any other) carries the rest
+  // of the line along with it instead of leaving them at their old spots.
+  function cascadeAfter(updated: { word: string; start: number; end: number }[], wordIdx: number) {
+    let cursor = updated[wordIdx].end;
+    for (let i = wordIdx + 1; i < updated.length; i++) {
+      const d = updated[i].end - updated[i].start;
+      updated[i] = { ...updated[i], start: cursor, end: cursor + d };
+      cursor += d;
+    }
+  }
+
   async function markWordNow(tag: string, text: string, wordIdx: number) {
     const base = getOrCreateWordTiming(tag, text);
     const updated = [...base];
     const duration = updated[wordIdx].end - updated[wordIdx].start;
     const start = Math.max(0, getTime() + syncOffset);
     updated[wordIdx] = { ...updated[wordIdx], start, end: start + duration };
-    // Re-fit every word AFTER this one too, spaced evenly from this new
-    // anchor — so marking just the first word of a line roughly times the
-    // rest of it too, instead of leaving them at their old/default spots.
-    let cursor = start + duration;
-    for (let i = wordIdx + 1; i < updated.length; i++) {
-      const d = updated[i].end - updated[i].start;
-      updated[i] = { ...updated[i], start: cursor, end: cursor + d };
-      cursor += d;
-    }
+    cascadeAfter(updated, wordIdx);
     await saveLyricLineEdits([{ tag, text }], { [tag]: updated });
   }
 
@@ -773,6 +777,7 @@ export default function YouTubeScreen({ navigation, route }: any) {
     const updated = [...base];
     const duration = updated[wordIdx].end - updated[wordIdx].start;
     updated[wordIdx] = { ...updated[wordIdx], start, end: start + duration };
+    cascadeAfter(updated, wordIdx);
     await saveLyricLineEdits([{ tag, text }], { [tag]: updated });
   }
 
@@ -784,6 +789,7 @@ export default function YouTubeScreen({ navigation, route }: any) {
     const duration = updated[wordIdx].end - updated[wordIdx].start;
     const start = Math.max(0, updated[wordIdx].start + delta);
     updated[wordIdx] = { ...updated[wordIdx], start, end: start + duration };
+    cascadeAfter(updated, wordIdx);
     await saveLyricLineEdits([{ tag, text }], { [tag]: updated });
   }
 
