@@ -285,22 +285,34 @@ export default function YouTubeScreen({ navigation, route }: any) {
     }
   }
 
-  // Nudge the current line's word-highlight timing earlier, for when the
-  // karaoke marker feels like it's lagging behind the actual singing on
-  // this specific line. Shifts every word's start/end back by a fixed
-  // step (clamped so it can't go negative or past the next word).
-  const SPEED_UP_STEP = 0.15;
-  async function speedUpCurrentLine(idx: number) {
+  // Nudge the current line's word-highlight timing earlier or later, for
+  // fine-tuning after the rough estimate (or a one-shot calibration) isn't
+  // quite right. Shifts every word's start/end by a fixed step in the given
+  // direction, clamped so words can't overlap or go negative.
+  const SPEED_STEP = 0.15;
+  async function nudgeCurrentLineTiming(idx: number, direction: 1 | -1) {
     const cur = lines[idx];
     if (!cur) return;
     const curWordTiming = wordTiming[cur.tag];
     if (!curWordTiming || !curWordTiming.length) return;
-    const shifted = curWordTiming.map((w, i) => {
-      const prevEnd = i > 0 ? curWordTiming[i - 1].end - SPEED_UP_STEP : 0;
-      const start = Math.max(0, prevEnd, w.start - SPEED_UP_STEP);
-      const duration = w.end - w.start;
-      return { ...w, start, end: start + duration };
-    });
+    const delta = direction * SPEED_STEP;
+    let shifted;
+    if (direction < 0) {
+      shifted = curWordTiming.map((w, i) => {
+        const prevEnd = i > 0 ? curWordTiming[i - 1].end + delta : 0;
+        const start = Math.max(0, prevEnd, w.start + delta);
+        const duration = w.end - w.start;
+        return { ...w, start, end: start + duration };
+      });
+    } else {
+      shifted = [...curWordTiming];
+      for (let i = shifted.length - 1; i >= 0; i--) {
+        const nextStart = i < shifted.length - 1 ? shifted[i + 1].start - delta : Infinity;
+        const start = Math.min(nextStart, shifted[i].start + delta);
+        const duration = shifted[i].end - shifted[i].start;
+        shifted[i] = { ...shifted[i], start, end: start + duration };
+      }
+    }
     const wordTimingUpdate = { [cur.tag]: shifted };
     await saveLyricLineEdits([{ tag: cur.tag, text: cur.text }], wordTimingUpdate);
   }
@@ -1017,10 +1029,19 @@ export default function YouTubeScreen({ navigation, route }: any) {
                     {canEditTranslations && !!cur.text && !!wordTiming[cur.tag]?.length && editingTag !== cur.tag && (
                       <TouchableOpacity
                         style={styles.lineActionBtn}
-                        onPress={() => speedUpCurrentLine(idx)}
+                        onPress={() => nudgeCurrentLineTiming(idx, -1)}
                         activeOpacity={0.7}
                       >
                         <MaterialIcons name="fast-forward" size={18} color={colors.primarySoft} />
+                      </TouchableOpacity>
+                    )}
+                    {canEditTranslations && !!cur.text && !!wordTiming[cur.tag]?.length && editingTag !== cur.tag && (
+                      <TouchableOpacity
+                        style={styles.lineActionBtn}
+                        onPress={() => nudgeCurrentLineTiming(idx, 1)}
+                        activeOpacity={0.7}
+                      >
+                        <MaterialIcons name="fast-rewind" size={18} color={colors.primarySoft} />
                       </TouchableOpacity>
                     )}
                     {canEditTranslations && !!cur.text && !wordTiming[cur.tag]?.length && editingTag !== cur.tag && (
