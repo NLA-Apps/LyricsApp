@@ -5814,5 +5814,57 @@
       "start": 80.74999999999997,
       "end": 81.09999999999998
     }
+  ],
+  "01:21.03": [
+    {
+      "word": "Called",
+      "start": 81.03,
+      "end": 81.38
+    },
+    {
+      "word": "each",
+      "start": 81.38,
+      "end": 81.73
+    },
+    {
+      "word": "other",
+      "start": 81.73,
+      "end": 82.08
+    },
+    {
+      "word": "nicknames",
+      "start": 82.08,
+      "end": 82.43
+    },
+    {
+      "word": "like",
+      "start": 82.43,
+      "end": 82.78
+    },
+    {
+      "word": "Sugar",
+      "start": 82.78,
+      "end": 83.13
+    },
+    {
+      "word": "Plum",
+      "start": 83.13,
+      "end": 83.48
+    },
+    {
+      "word": "and",
+      "start": 83.48,
+      "end": 83.83
+    },
+    {
+      "word": "Poo",
+      "start": 83.83,
+      "end": 84.18
+    },
+    {
+      "word": "Bear",
+      "start": 84.18,
+      "end": 84.53
+    }
   ]
 }
