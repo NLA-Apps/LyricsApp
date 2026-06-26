@@ -522,10 +522,15 @@ export default function YouTubeScreen({ navigation, route }: any) {
   }
 
   // Type the exact second directly under a word instead of nudging by a
-  // fixed step.
+  // fixed step. The field shows/accepts the RAW YouTube player time (what
+  // you read off the video's own progress bar) — everywhere else in this
+  // file stores word/line timing as videoTime + syncOffset, so the typed
+  // value has to go through the same conversion or it lands off by however
+  // much this song's offset is.
   async function setWordStartTime(tag: string, text: string, wordIdx: number, value: string) {
-    const start = parseFloat(value.replace(',', '.'));
-    if (!Number.isFinite(start) || start < 0) return;
+    const typed = parseFloat(value.replace(',', '.'));
+    if (!Number.isFinite(typed) || typed < 0) return;
+    const start = Math.max(0, typed + syncOffset);
     const base = getOrCreateWordTiming(tag, text);
     const updated = [...base];
     const duration = updated[wordIdx].end - updated[wordIdx].start;
@@ -1182,10 +1187,10 @@ export default function YouTubeScreen({ navigation, route }: any) {
                                         style={styles.wordTimeInput}
                                         defaultValue={
                                           wordTiming[cur.tag]?.[myWi]
-                                            ? wordTiming[cur.tag][myWi].start.toFixed(2)
+                                            ? (wordTiming[cur.tag][myWi].start - syncOffset).toFixed(2)
                                             : ''
                                         }
-                                        placeholder={(cur.time + myWi * DEFAULT_WORD_DURATION).toFixed(2)}
+                                        placeholder={(cur.time + myWi * DEFAULT_WORD_DURATION - syncOffset).toFixed(2)}
                                         placeholderTextColor={colors.textFaint}
                                         keyboardType="numbers-and-punctuation"
                                         onSubmitEditing={(e) =>
