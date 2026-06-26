@@ -1743,5 +1743,47 @@
       "end": 38.935,
       "score": 0.303
     }
+  ],
+  "00:37.16": [
+    {
+      "word": "When",
+      "start": 37.16,
+      "end": 37.51
+    },
+    {
+      "word": "I",
+      "start": 37.51,
+      "end": 37.86
+    },
+    {
+      "word": "compliment",
+      "start": 37.86,
+      "end": 38.21
+    },
+    {
+      "word": "her,",
+      "start": 38.21,
+      "end": 38.56
+    },
+    {
+      "word": "she",
+      "start": 38.56,
+      "end": 38.91
+    },
+    {
+      "word": "won't",
+      "start": 38.91,
+      "end": 39.26
+    },
+    {
+      "word": "believe",
+      "start": 39.26,
+      "end": 39.61
+    },
+    {
+      "word": "me",
+      "start": 39.61,
+      "end": 39.96
+    }
   ]
 }
