@@ -1096,5 +1096,32 @@
       "start": 78.82,
       "end": 79.17
     }
+  ],
+  "01:19.37": [
+    {
+      "word": "Can't",
+      "start": 79.37,
+      "end": 79.72
+    },
+    {
+      "word": "even",
+      "start": 79.72,
+      "end": 80.07
+    },
+    {
+      "word": "express",
+      "start": 80.07,
+      "end": 80.42
+    },
+    {
+      "word": "through",
+      "start": 80.42,
+      "end": 80.77
+    },
+    {
+      "word": "words",
+      "start": 80.77,
+      "end": 81.12
+    }
   ]
 }
