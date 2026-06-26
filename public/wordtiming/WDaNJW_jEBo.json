@@ -2169,5 +2169,72 @@
       "start": 165.12,
       "end": 165.47
     }
+  ],
+  "02:46.37": [
+    {
+      "word": "I",
+      "start": 166.37,
+      "end": 166.72
+    },
+    {
+      "word": "never",
+      "start": 166.72,
+      "end": 167.07
+    },
+    {
+      "word": "meant",
+      "start": 167.07,
+      "end": 167.42
+    },
+    {
+      "word": "to",
+      "start": 167.42,
+      "end": 167.77
+    },
+    {
+      "word": "put",
+      "start": 167.77,
+      "end": 168.12
+    },
+    {
+      "word": "a",
+      "start": 168.12,
+      "end": 168.47
+    },
+    {
+      "word": "thousand",
+      "start": 168.47,
+      "end": 168.82
+    },
+    {
+      "word": "pounds",
+      "start": 168.82,
+      "end": 169.17
+    },
+    {
+      "word": "of",
+      "start": 169.17,
+      "end": 169.52
+    },
+    {
+      "word": "stress",
+      "start": 169.52,
+      "end": 169.87
+    },
+    {
+      "word": "on",
+      "start": 169.87,
+      "end": 170.22
+    },
+    {
+      "word": "ya",
+      "start": 170.22,
+      "end": 170.57
+    },
+    {
+      "word": "head",
+      "start": 170.57,
+      "end": 170.92
+    }
   ]
 }
