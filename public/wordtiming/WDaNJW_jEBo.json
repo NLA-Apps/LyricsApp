@@ -412,53 +412,6 @@
       "end": 43.453509
     }
   ],
-  "01:10.37": [
-    {
-      "word": "Stuck",
-      "start": 70.37,
-      "end": 70.72
-    },
-    {
-      "word": "on",
-      "start": 70.72,
-      "end": 71.07
-    },
-    {
-      "word": "the",
-      "start": 71.07,
-      "end": 71.42
-    },
-    {
-      "word": "grind",
-      "start": 71.42,
-      "end": 71.77
-    },
-    {
-      "word": "tryin'",
-      "start": 71.77,
-      "end": 72.12
-    },
-    {
-      "word": "to",
-      "start": 72.12,
-      "end": 72.47
-    },
-    {
-      "word": "elevate",
-      "start": 72.47,
-      "end": 72.82
-    },
-    {
-      "word": "it",
-      "start": 72.82,
-      "end": 73.17
-    },
-    {
-      "word": "now",
-      "start": 73.17,
-      "end": 73.52
-    }
-  ],
   "01:13.37": [
     {
       "word": "Hey,",
@@ -6136,6 +6089,53 @@
       "word": "us",
       "start": 68.16389099999999,
       "end": 68.513891
+    }
+  ],
+  "01:10.12": [
+    {
+      "word": "Stuck",
+      "start": 70.12,
+      "end": 70.47
+    },
+    {
+      "word": "on",
+      "start": 70.47,
+      "end": 70.82
+    },
+    {
+      "word": "the",
+      "start": 70.82,
+      "end": 71.17
+    },
+    {
+      "word": "grind",
+      "start": 71.17,
+      "end": 71.52
+    },
+    {
+      "word": "tryin'",
+      "start": 71.52,
+      "end": 71.87
+    },
+    {
+      "word": "to",
+      "start": 71.87,
+      "end": 72.22
+    },
+    {
+      "word": "elevate",
+      "start": 72.22,
+      "end": 72.57
+    },
+    {
+      "word": "it",
+      "start": 72.57,
+      "end": 72.92
+    },
+    {
+      "word": "now",
+      "start": 72.92,
+      "end": 73.27
     }
   ]
 }
