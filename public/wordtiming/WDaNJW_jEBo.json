@@ -626,5 +626,62 @@
       "start": 120.87,
       "end": 121.22
     }
+  ],
+  "02:00.72": [
+    {
+      "word": "We",
+      "start": 120.72,
+      "end": 121.07
+    },
+    {
+      "word": "been",
+      "start": 121.07,
+      "end": 121.42
+    },
+    {
+      "word": "together",
+      "start": 121.42,
+      "end": 121.77
+    },
+    {
+      "word": "for",
+      "start": 121.77,
+      "end": 122.12
+    },
+    {
+      "word": "a",
+      "start": 122.12,
+      "end": 122.47
+    },
+    {
+      "word": "few",
+      "start": 122.47,
+      "end": 122.82
+    },
+    {
+      "word": "years,",
+      "start": 122.82,
+      "end": 123.17
+    },
+    {
+      "word": "shared",
+      "start": 123.17,
+      "end": 123.52
+    },
+    {
+      "word": "a",
+      "start": 123.52,
+      "end": 123.87
+    },
+    {
+      "word": "few",
+      "start": 123.87,
+      "end": 124.22
+    },
+    {
+      "word": "tears",
+      "start": 124.22,
+      "end": 124.57
+    }
   ]
 }
