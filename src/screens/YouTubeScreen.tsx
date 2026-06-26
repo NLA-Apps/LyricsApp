@@ -203,9 +203,10 @@ export default function YouTubeScreen({ navigation, route }: any) {
   const [tooltip, setTooltip] = useState<{ label: string; x: number; y: number } | null>(null);
   function showTip(e: any, label: string) {
     if (Platform.OS !== 'web') return;
-    const x = e?.nativeEvent?.clientX ?? e?.clientX ?? 0;
-    const y = e?.nativeEvent?.clientY ?? e?.clientY ?? 0;
-    setTooltip({ label, x, y });
+    const target = e?.currentTarget;
+    const rect = target?.getBoundingClientRect?.();
+    if (!rect) return;
+    setTooltip({ label, x: rect.left + rect.width / 2, y: rect.top });
   }
   function hideTip() {
     setTooltip(null);
@@ -1330,7 +1331,10 @@ export default function YouTubeScreen({ navigation, route }: any) {
       </ScrollView>
       {tooltip && (
         <View
-          style={[styles.hoverTooltip, { left: tooltip.x + 10, top: tooltip.y + 10 }]}
+          style={[
+            styles.hoverTooltip,
+            { left: tooltip.x, top: tooltip.y - 8, transform: [{ translateX: '-50%' }, { translateY: '-100%' }] as any },
+          ]}
           pointerEvents="none"
         >
           <Text style={styles.hoverTooltipText}>{tooltip.label}</Text>
