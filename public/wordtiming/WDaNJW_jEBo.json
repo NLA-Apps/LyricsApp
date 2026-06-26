@@ -1962,5 +1962,27 @@
       "start": 192.45,
       "end": 192.8
     }
+  ],
+  "03:13.35": [
+    {
+      "word": "Those",
+      "start": 193.35,
+      "end": 193.7
+    },
+    {
+      "word": "little",
+      "start": 193.7,
+      "end": 194.05
+    },
+    {
+      "word": "elaborate",
+      "start": 194.05,
+      "end": 194.4
+    },
+    {
+      "word": "ways",
+      "start": 194.4,
+      "end": 194.75
+    }
   ]
 }
