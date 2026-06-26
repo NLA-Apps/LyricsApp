@@ -433,10 +433,9 @@ export default function YouTubeScreen({ navigation, route }: any) {
   const SPEED_STEP = 0.15;
   async function nudgeCurrentLineTiming(idx: number, direction: 1 | -1) {
     const cur = lines[idx];
-    if (!cur || !cur.text) return;
-    // A line with no timing yet (e.g. one added manually) gets a rough
-    // evenly-spaced starting point on the fly, so the nudge buttons work
-    // immediately without forcing a separate ⏱ calibration step first.
+    if (!cur || !cur.text || currentWord < 0) return;
+    // Only the live, currently-highlighted word — not the whole line — so
+    // you can correct just the one word that feels off while listening.
     const curWordTiming =
       wordTiming[cur.tag] && wordTiming[cur.tag].length
         ? wordTiming[cur.tag]
@@ -445,27 +444,14 @@ export default function YouTubeScreen({ navigation, route }: any) {
             start: +(cur.time + i * DEFAULT_WORD_DURATION).toFixed(3),
             end: +(cur.time + (i + 1) * DEFAULT_WORD_DURATION).toFixed(3),
           }));
-    if (!curWordTiming.length) return;
+    const w = curWordTiming[currentWord];
+    if (!w) return;
     const delta = direction * SPEED_STEP;
-    let shifted;
-    if (direction < 0) {
-      shifted = curWordTiming.map((w, i) => {
-        const prevEnd = i > 0 ? curWordTiming[i - 1].end + delta : 0;
-        const start = Math.max(0, prevEnd, w.start + delta);
-        const duration = w.end - w.start;
-        return { ...w, start, end: start + duration };
-      });
-    } else {
-      shifted = [...curWordTiming];
-      for (let i = shifted.length - 1; i >= 0; i--) {
-        const nextStart = i < shifted.length - 1 ? shifted[i + 1].start - delta : Infinity;
-        const start = Math.min(nextStart, shifted[i].start + delta);
-        const duration = shifted[i].end - shifted[i].start;
-        shifted[i] = { ...shifted[i], start, end: start + duration };
-      }
-    }
-    const wordTimingUpdate = { [cur.tag]: shifted };
-    await saveLyricLineEdits([{ tag: cur.tag, text: cur.text }], wordTimingUpdate);
+    const duration = w.end - w.start;
+    const start = Math.max(0, w.start + delta);
+    const shifted = [...curWordTiming];
+    shifted[currentWord] = { ...w, start, end: start + duration };
+    await saveLyricLineEdits([{ tag: cur.tag, text: cur.text }], { [cur.tag]: shifted });
   }
 
   // For a line with no word-timing at all (e.g. one added manually), give
@@ -502,65 +488,6 @@ export default function YouTubeScreen({ navigation, route }: any) {
     const start = Math.max(0, w.start + delta);
     const updated = [...curWordTiming];
     updated[wordIdx] = { ...w, start, end: start + duration };
-    await saveLyricLineEdits([{ tag, text }], { [tag]: updated });
-  }
-
-  // Shared starting point for either editing a word's time directly or
-  // bumping it by a step: whatever timing already exists for the line, or
-  // the same rough evenly-spaced default used elsewhere if there's none yet.
-  function getOrCreateWordTiming(tag: string, text: string) {
-    const words = text.split(/\s+/).filter(Boolean);
-    const lineStart = lines.find((l) => l.tag === tag)?.time ?? 0;
-    const existing = wordTiming[tag];
-    return existing && existing.length === words.length
-      ? existing
-      : words.map((word, i) => ({
-          word,
-          start: +(lineStart + i * DEFAULT_WORD_DURATION).toFixed(3),
-          end: +(lineStart + (i + 1) * DEFAULT_WORD_DURATION).toFixed(3),
-        }));
-  }
-
-  // Type the exact second directly under a word instead of nudging by a
-  // fixed step. The field shows/accepts the RAW YouTube player time (what
-  // you read off the video's own progress bar) — everywhere else in this
-  // file stores word/line timing as videoTime + syncOffset, so the typed
-  // value has to go through the same conversion or it lands off by however
-  // much this song's offset is.
-  async function setWordStartTime(tag: string, text: string, wordIdx: number, value: string) {
-    const typed = parseFloat(value.replace(',', '.'));
-    if (!Number.isFinite(typed) || typed < 0) return;
-    const start = Math.max(0, typed + syncOffset);
-    const base = getOrCreateWordTiming(tag, text);
-    const updated = [...base];
-    const duration = updated[wordIdx].end - updated[wordIdx].start;
-    updated[wordIdx] = { ...updated[wordIdx], start, end: start + duration };
-    await saveLyricLineEdits([{ tag, text }], { [tag]: updated });
-  }
-
-  // Small +/- step buttons under the same field, for nudging without typing.
-  const WORD_TIME_STEP = 0.1;
-  async function bumpWordTime(tag: string, text: string, wordIdx: number, delta: number) {
-    const base = getOrCreateWordTiming(tag, text);
-    const updated = [...base];
-    const duration = updated[wordIdx].end - updated[wordIdx].start;
-    const start = Math.max(0, updated[wordIdx].start + delta);
-    updated[wordIdx] = { ...updated[wordIdx], start, end: start + duration };
-    await saveLyricLineEdits([{ tag, text }], { [tag]: updated });
-  }
-
-  // Discard whatever manual override a single word has and put it back on
-  // the same rough evenly-spaced default everyone starts from.
-  async function resetWordTime(tag: string, text: string, wordIdx: number) {
-    const words = text.split(/\s+/).filter(Boolean);
-    const lineStart = lines.find((l) => l.tag === tag)?.time ?? 0;
-    const base = getOrCreateWordTiming(tag, text);
-    const updated = [...base];
-    updated[wordIdx] = {
-      word: words[wordIdx],
-      start: +(lineStart + wordIdx * DEFAULT_WORD_DURATION).toFixed(3),
-      end: +(lineStart + (wordIdx + 1) * DEFAULT_WORD_DURATION).toFixed(3),
-    };
     await saveLyricLineEdits([{ tag, text }], { [tag]: updated });
   }
 
@@ -1196,51 +1123,6 @@ export default function YouTubeScreen({ navigation, route }: any) {
                                     <TouchableOpacity onPress={() => onWordPress(key, w)} activeOpacity={0.7}>
                                       <Text style={[styles.currentWord, isActiveWord && styles.activeWord]}>{w}</Text>
                                     </TouchableOpacity>
-                                    {canEditTranslations && (
-                                      <TextInput
-                                        key={`${cur.tag}-${myWi}-${wordTiming[cur.tag]?.[myWi]?.start ?? ''}`}
-                                        style={styles.wordTimeInput}
-                                        defaultValue={
-                                          wordTiming[cur.tag]?.[myWi]
-                                            ? (wordTiming[cur.tag][myWi].start - syncOffset).toFixed(2)
-                                            : ''
-                                        }
-                                        placeholder={(cur.time + myWi * DEFAULT_WORD_DURATION - syncOffset).toFixed(2)}
-                                        placeholderTextColor={colors.textFaint}
-                                        keyboardType="numbers-and-punctuation"
-                                        onSubmitEditing={(e) =>
-                                          setWordStartTime(cur.tag, cur.text, myWi, e.nativeEvent.text)
-                                        }
-                                        onBlur={(e: any) =>
-                                          setWordStartTime(cur.tag, cur.text, myWi, e.nativeEvent.text ?? e.target?.value ?? '')
-                                        }
-                                      />
-                                    )}
-                                    {canEditTranslations && (
-                                      <View style={styles.wordTimeStepRow}>
-                                        <TouchableOpacity
-                                          style={styles.wordTimeStepBtn}
-                                          onPress={() => bumpWordTime(cur.tag, cur.text, myWi, -WORD_TIME_STEP)}
-                                          hitSlop={4}
-                                        >
-                                          <Text style={styles.wordTimeStepText}>−</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                          style={styles.wordTimeStepBtn}
-                                          onPress={() => bumpWordTime(cur.tag, cur.text, myWi, WORD_TIME_STEP)}
-                                          hitSlop={4}
-                                        >
-                                          <Text style={styles.wordTimeStepText}>+</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                          style={styles.wordTimeStepBtn}
-                                          onPress={() => resetWordTime(cur.tag, cur.text, myWi)}
-                                          hitSlop={4}
-                                        >
-                                          <MaterialIcons name="restore" size={11} color={colors.textFaint} />
-                                        </TouchableOpacity>
-                                      </View>
-                                    )}
                                   </View>
                                 );
                               })}
@@ -1834,26 +1716,6 @@ const styles = StyleSheet.create({
   lineActionBtn: { padding: 4 },
   lineActionIcon: { fontSize: 26, color: colors.textFaint },
   lineActionIconActive: { color: colors.primarySoft },
-  wordTimeInput: {
-    width: 44,
-    fontSize: 10,
-    color: colors.textFaint,
-    backgroundColor: colors.surfaceLight,
-    borderRadius: 4,
-    textAlign: 'center',
-    marginTop: 2,
-    paddingVertical: 1,
-  },
-  wordTimeStepRow: { flexDirection: 'row', gap: 2, marginTop: 1 },
-  wordTimeStepBtn: {
-    width: 20,
-    height: 16,
-    borderRadius: 3,
-    backgroundColor: colors.surfaceLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  wordTimeStepText: { color: colors.textFaint, fontSize: 11, lineHeight: 13 },
 
   // Translation bubble above a tapped word.
   bubbleContainer: {
