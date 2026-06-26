@@ -2108,8 +2108,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.surfaceLight,
   },
-  allLinesText: { flex: 1, color: colors.primarySoft, fontSize: 13, textAlign: 'right', fontWeight: '700' },
-  allLinesHeText: { color: colors.textMuted, fontSize: 12, textAlign: 'right', marginTop: 2 },
+  allLinesText: { flex: 1, color: colors.primarySoft, fontSize: 13, textAlign: 'left', fontWeight: '700' },
+  allLinesHeText: { color: colors.textMuted, fontSize: 12, textAlign: 'left', marginTop: 2 },
   allLinesWordsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
