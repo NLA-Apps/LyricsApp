@@ -319,6 +319,68 @@ export default function YouTubeScreen({ navigation, route }: any) {
     }
   }
 
+  // Dev-only: paste a whole song's worth of lines at once, typed/pasted by
+  // you directly into the app (not relayed through chat) — one English line
+  // per row, no timestamps needed. Each line gets a rough auto timestamp
+  // (spaced a fixed number of seconds apart starting from wherever you
+  // paused the video) plus a rough default word-timing, exactly like typing
+  // them one at a time with "add missing line" would, just much faster.
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [bulkText, setBulkText] = useState('');
+  const [bulkStatus, setBulkStatus] = useState<'idle' | 'saving' | 'error'>('idle');
+  const [bulkProgress, setBulkProgress] = useState({ done: 0, total: 0 });
+  const BULK_LINE_GAP = 3; // seconds between each pasted line's auto timestamp
+  function startBulkImport() {
+    setBulkText('');
+    setBulkStatus('idle');
+    setBulkOpen(true);
+  }
+  function cancelBulkImport() {
+    setBulkOpen(false);
+  }
+  async function runBulkImport() {
+    const rows = bulkText.split('\n').map((r) => r.trim()).filter(Boolean);
+    if (!rows.length) return;
+    setBulkStatus('saving');
+    setBulkProgress({ done: 0, total: rows.length });
+    try {
+      let t = Math.max(0, getTime() + syncOffset);
+      for (const text of rows) {
+        const mm = String(Math.floor(t / 60)).padStart(2, '0');
+        const ss = (t % 60).toFixed(2).padStart(5, '0');
+        const tag = `${mm}:${ss}`;
+        const time = parseInt(mm, 10) * 60 + parseFloat(ss);
+        const words = text.split(/\s+/).filter(Boolean);
+        const wordTimingUpdate = words.map((word, i) => ({
+          word,
+          start: +(time + i * DEFAULT_WORD_DURATION).toFixed(3),
+          end: +(time + (i + 1) * DEFAULT_WORD_DURATION).toFixed(3),
+        }));
+        const res = await fetch('http://localhost:5174/insert-lyric-line', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ videoId, tag, text, wordTimingUpdate, track }),
+        });
+        if (!res.ok) throw new Error('insert failed');
+        setLines((prev) => {
+          const next = [...prev, { time, text, tag }];
+          next.sort((a, b) => a.time - b.time);
+          return next;
+        });
+        setWordTiming((prev) => ({ ...prev, [tag]: wordTimingUpdate }));
+        const tr = await translateToHebrew(text);
+        await saveLineTranslation(tag, tr);
+        t += BULK_LINE_GAP;
+        setBulkProgress((p) => ({ ...p, done: p.done + 1 }));
+      }
+      setBulkStatus('idle');
+      setBulkOpen(false);
+      setBulkText('');
+    } catch {
+      setBulkStatus('error');
+    }
+  }
+
   // Dev-only: wipe every line for this song (text, translation, timing —
   // everything), so it can be rebuilt from scratch with "add missing line".
   // A deliberate, confirmed full reset, not a per-line action.
@@ -1586,6 +1648,47 @@ export default function YouTubeScreen({ navigation, route }: any) {
                     )}
                   </View>
                 )}
+                {canEditTranslations && !bulkOpen && (
+                  <View style={styles.offsetRow}>
+                    <TouchableOpacity style={styles.calBtn} onPress={startBulkImport} activeOpacity={0.85}>
+                      <Text style={styles.calBtnText}>📋 ייבוא מהיר (הדבק את כל המילים)</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                {canEditTranslations && bulkOpen && (
+                  <View style={styles.bulkImportBox}>
+                    <Text style={styles.syncHint}>
+                      תדביק כאן את כל מילות השיר שאתה עצמך הקלדת/הדבקת ממקור משלך — שורה אחת לכל
+                      שורת שיר, בלי תזמון. כל שורה תקבל זמן גס אוטומטי ({BULK_LINE_GAP}s בין שורה
+                      לשורה, מתחיל מהזמן הנוכחי בנגן) שתוכל לכוונן אחר כך בכלים הקיימים.
+                    </Text>
+                    <TextInput
+                      style={styles.bulkImportInput}
+                      value={bulkText}
+                      onChangeText={setBulkText}
+                      multiline
+                      placeholder={'שורה ראשונה\nשורה שנייה\n...'}
+                      placeholderTextColor={colors.textFaint}
+                      textAlign="left"
+                    />
+                    {bulkStatus === 'saving' && (
+                      <Text style={styles.syncHint}>
+                        מייבא… {bulkProgress.done}/{bulkProgress.total}
+                      </Text>
+                    )}
+                    {bulkStatus === 'error' && (
+                      <Text style={[styles.syncHint, { color: colors.danger }]}>שגיאה בייבוא</Text>
+                    )}
+                    <View style={styles.editBtnRow}>
+                      <TouchableOpacity style={styles.calBtn} onPress={runBulkImport} disabled={bulkStatus === 'saving'}>
+                        <Text style={styles.calBtnText}>ייבא ותזמן אוטומטי</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.editBtn} onPress={cancelBulkImport}>
+                        <MaterialIcons name="close" size={20} color={colors.textFaint} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )}
               </>
             )}
           </>
@@ -1837,6 +1940,22 @@ const styles = StyleSheet.create({
   lineActionBtn: { padding: 4 },
   lineActionIcon: { fontSize: 26, color: colors.textFaint },
   lineActionIconActive: { color: colors.primarySoft },
+  bulkImportBox: {
+    width: '100%',
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    marginTop: spacing.sm,
+    gap: spacing.sm,
+  },
+  bulkImportInput: {
+    minHeight: 160,
+    color: colors.text,
+    backgroundColor: colors.surfaceLight,
+    borderRadius: radius.sm,
+    padding: spacing.sm,
+    fontSize: 14,
+  },
   wordTimeInput: {
     width: 44,
     fontSize: 10,
