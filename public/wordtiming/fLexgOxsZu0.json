@@ -1874,5 +1874,42 @@
       "start": 56.71,
       "end": 57.06
     }
+  ],
+  "01:05.49": [
+    {
+      "word": "Don't",
+      "start": 65.49,
+      "end": 65.84
+    },
+    {
+      "word": "feel",
+      "start": 65.84,
+      "end": 66.19
+    },
+    {
+      "word": "like",
+      "start": 66.19,
+      "end": 66.54
+    },
+    {
+      "word": "picking",
+      "start": 66.54,
+      "end": 66.89
+    },
+    {
+      "word": "up",
+      "start": 66.89,
+      "end": 67.24
+    },
+    {
+      "word": "my",
+      "start": 67.24,
+      "end": 67.59
+    },
+    {
+      "word": "phone",
+      "start": 67.59,
+      "end": 67.94
+    }
   ]
 }
