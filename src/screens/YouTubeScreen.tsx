@@ -108,6 +108,10 @@ export default function YouTubeScreen({ navigation, route }: any) {
   const [currentLine, setCurrentLine] = useState(-1);
   const [currentWord, setCurrentWord] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
+  // Raw video playback position, just for the little timer shown under the
+  // Hebrew subtitle — not adjusted by syncOffset, so it matches what's on
+  // the YouTube player's own progress bar.
+  const [displayTime, setDisplayTime] = useState(0);
   const [syncOffset, setSyncOffset] = useState(0); // per-song sync correction
 
   // Load this song's saved sync offset.
@@ -1060,6 +1064,7 @@ export default function YouTubeScreen({ navigation, route }: any) {
   useEffect(() => {
     if (lines.length === 0) return;
     const id = setInterval(() => {
+      setDisplayTime(getTime());
       const t = getTime() + LOOKAHEAD + syncOffset;
       let idx = -1;
       for (let i = 0; i < lines.length; i++) {
@@ -1690,6 +1695,9 @@ export default function YouTubeScreen({ navigation, route }: any) {
                       : null}
                   </View>
 
+                  {/* Running song timer, just under the Hebrew subtitle. */}
+                  <Text style={styles.songTimer}>{formatMmSs(displayTime)}</Text>
+
                   {/* Always mounted at a fixed height, lyrics or not, so the
                       controls below never shift between sung lines and
                       instrumental (♪) gaps. */}
@@ -2223,9 +2231,10 @@ const styles = StyleSheet.create({
   // Fixed-height slot so showing/changing the translation doesn't move things.
   // Fixed height (not minHeight) so a 1-line vs 2-line translation never
   // changes the box size — keeps the buttons below it from jumping.
-  heSlot: { height: 54, justifyContent: 'center', marginTop: 2, overflow: 'hidden' },
+  heSlot: { height: 54, justifyContent: 'center', marginTop: 16, overflow: 'hidden' },
   heSlotEditing: { height: 'auto', minHeight: 54, overflow: 'visible' },
   lineHeRow: { flexDirection: 'row-reverse', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' },
+  songTimer: { textAlign: 'center', color: colors.textFaint, fontSize: 13, marginTop: 6, marginBottom: 4 },
   // Every word shares the exact same font size/weight — only the text color
   // changes — so highlighting the active word never resizes or reflows
   // the sentence.
