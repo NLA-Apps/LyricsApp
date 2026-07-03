@@ -94,11 +94,6 @@ function App() {
         <StatusBarBackground />
         <XpPopup />
         <InstallPrompt />
-        <View pointerEvents="none" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, alignItems: 'center', paddingVertical: 5, backgroundColor: colors.background }}>
-          <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 10, fontWeight: '600' }}>
-            © {new Date().getFullYear()} NLA-Apps
-          </Text>
-        </View>
       </View>
     </SafeAreaProvider>
   );
@@ -167,6 +162,11 @@ export default function Root() {
           }}
         >
           <App />
+          <View pointerEvents="none" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, alignItems: 'center', paddingVertical: 5, backgroundColor: colors.background }}>
+            <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 10, fontWeight: '600' }}>
+              © {new Date().getFullYear()} NLA-Apps
+            </Text>
+          </View>
         </View>
         {wide && (
           <TouchableOpacity
