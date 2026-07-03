@@ -137,7 +137,6 @@ export default function SongsListScreen({ navigation }: any) {
               {allSongs.length} {allSongs.length === 1 ? 'שיר' : 'שירים'} בספרייה
             </Text>
             <Text style={styles.legendLabel}>סימן 🔤 אדום ליד הנגן = מילים ותזמון מהכתוביות הרשמיות של סרטון היוטיוב</Text>
-            <Text style={styles.copyright}>© {new Date().getFullYear()} NLA-Apps · All rights reserved</Text>
           </>
         }
       />
@@ -277,5 +276,4 @@ const styles = StyleSheet.create({
   addBtnText: { color: colors.text, fontSize: 15, fontWeight: '700' },
   countLabel: { color: colors.textFaint, fontSize: 13, textAlign: 'center', marginTop: spacing.md },
   legendLabel: { color: colors.textFaint, fontSize: 11, textAlign: 'center', marginTop: 4 },
-  copyright: { color: colors.textFaint, fontSize: 11, textAlign: 'center', marginTop: 12, marginBottom: 8, opacity: 0.6 },
 });
