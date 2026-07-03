@@ -94,8 +94,8 @@ function App() {
         <StatusBarBackground />
         <XpPopup />
         <InstallPrompt />
-        <View pointerEvents="none" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, alignItems: 'center', paddingBottom: 4 }}>
-          <Text style={{ color: 'rgba(255,255,255,0.15)', fontSize: 10 }}>
+        <View pointerEvents="none" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, alignItems: 'center', paddingVertical: 5, backgroundColor: colors.primary }}>
+          <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 10, fontWeight: '600' }}>
             © {new Date().getFullYear()} NLA-Apps
           </Text>
         </View>
