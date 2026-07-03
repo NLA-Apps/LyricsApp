@@ -146,7 +146,7 @@ export default function SongsListScreen({ navigation }: any) {
 
 function SongCard({ song, number, onPress }: { song: LibrarySong; number: number; onPress: () => void }) {
   const handleShare = () => {
-    const appUrl = `https://netanelatia.github.io/LyricsApp/?song=${song.videoId}`;
+    const appUrl = `https://nla-apps.github.io/LyricsApp/?song=${song.videoId}`;
     Share.share({
       message: `🎵 ${song.track} – ${song.artist}\n${appUrl}`,
       url: appUrl,
