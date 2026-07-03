@@ -74,26 +74,33 @@ function App() {
   return (
     <SafeAreaProvider>
       <View style={{ flex: 1 }}>
-        <NavigationContainer
-          ref={navRef}
-          documentTitle={{ formatter: () => 'LyricsApp' }}
-          onReady={() => {
-            const deepLink = getDeepLinkSong();
-            if (deepLink) (navRef.current as any)?.navigate('YouTube', deepLink);
-          }}
-        >
-          <StatusBar style="light" />
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="SongsList" component={SongsListScreen} />
-            <Stack.Screen name="Song" component={SongScreen} />
-            <Stack.Screen name="YouTube" component={YouTubeScreen} />
-            <Stack.Screen name="Vocab" component={VocabScreen} />
-            <Stack.Screen name="Progress" component={ProgressScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-        <StatusBarBackground />
-        <XpPopup />
-        <InstallPrompt />
+        <View style={{ flex: 1 }}>
+          <NavigationContainer
+            ref={navRef}
+            documentTitle={{ formatter: () => 'LyricsApp' }}
+            onReady={() => {
+              const deepLink = getDeepLinkSong();
+              if (deepLink) (navRef.current as any)?.navigate('YouTube', deepLink);
+            }}
+          >
+            <StatusBar style="light" />
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="SongsList" component={SongsListScreen} />
+              <Stack.Screen name="Song" component={SongScreen} />
+              <Stack.Screen name="YouTube" component={YouTubeScreen} />
+              <Stack.Screen name="Vocab" component={VocabScreen} />
+              <Stack.Screen name="Progress" component={ProgressScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
+          <StatusBarBackground />
+          <XpPopup />
+          <InstallPrompt />
+        </View>
+        <View style={{ alignItems: 'center', paddingVertical: 5, backgroundColor: colors.background }}>
+          <Text style={{ color: 'rgba(255,255,255,0.35)', fontSize: 10, fontWeight: '600' }}>
+            © {new Date().getFullYear()} NLA-Apps
+          </Text>
+        </View>
       </View>
     </SafeAreaProvider>
   );
@@ -153,20 +160,18 @@ export default function Root() {
             width: '100%',
             maxWidth: desktopMode ? 640 : 420,
             backgroundColor: colors.background,
-            borderRadius: desktopMode ? 20 : 0,
+            borderRadius: desktopMode ? 24 : 0,
             overflow: 'hidden',
-            shadowColor: '#000',
-            shadowOpacity: 0.5,
-            shadowRadius: 32,
-            ...(Platform.OS === 'web' ? { boxShadow: '0 24px 60px rgba(0,0,0,0.55)' } as any : {}),
+            ...(Platform.OS === 'web' ? {
+              boxShadow: '0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.07), inset 0 1px 0 rgba(255,255,255,0.12)',
+            } as any : {
+              shadowColor: '#000',
+              shadowOpacity: 0.7,
+              shadowRadius: 40,
+            }),
           }}
         >
           <App />
-          <View pointerEvents="none" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, alignItems: 'center', paddingVertical: 5, backgroundColor: colors.background }}>
-            <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 10, fontWeight: '600' }}>
-              © {new Date().getFullYear()} NLA-Apps
-            </Text>
-          </View>
         </View>
         {wide && (
           <TouchableOpacity
